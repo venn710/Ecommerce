@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fresh/screens/Homescreen.dart';
 import 'package:fresh/women.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './util.dart';
 import './server.dart';
 // import 'package:mongo_dart/mongo_dart.dart';
@@ -14,15 +19,14 @@ class _RegisterState extends State<Register> {
   final _auth=FirebaseAuth.instance;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getauth();
+    getauth();
 
   }
-  // void getauth()async
-  // {
-  //  await Firebase.initializeApp;
-  // }
+  void getauth()async
+  {
+   await Firebase.initializeApp;
+  }
   @override
   Widget build(BuildContext context) {
     String pass;
@@ -39,8 +43,6 @@ class _RegisterState extends State<Register> {
           textAlign: TextAlign.center,
           onChanged: (value) {
             mail=value;
-
-            //Do something with the user input.
           },
           decoration: InputDecoration(
             
@@ -67,7 +69,6 @@ class _RegisterState extends State<Register> {
           textAlign: TextAlign.center,
           onChanged: (value) {
             pass=value;
-            //Do something with the user input.
           },
           decoration: InputDecoration(
             hintText: 'Enter your password',
@@ -92,29 +93,35 @@ class _RegisterState extends State<Register> {
             child:Text("register"),
             onPressed:() async
             {
+              print(mail);
+              print(pass);
   var user = await _auth.createUserWithEmailAndPassword(
     email: mail,
     password: pass,
   );
-  // var res=user.user.emailVerified;
   if(user!=null)
   {
     print("VERIFIED");
-    print("start done");
-    var coll=onlydb.collection('users');
-    print("fetchimg done");
-    await coll.save({
-      'id':user.user.uid,
-      'email':mail,
-      'pass':pass
-      }
-
-    );
-      print("doneeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+              var _obj={
+                'email':mail,
+                'pass':pass,
+                'address':{}
+                };
+               var _res=jsonEncode(_obj);
+                var resuu=await post(Uri.parse("https://fresh48.herokuapp.com/user",),body:_res,headers: {
+              "Content-Type": "application/json"
+               });
+    print("doneeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('email',mail);
+        prefs.setString('pass', pass);           
+    if(mail!=null && pass!=null)
       Navigator.push(context,MaterialPageRoute(builder: (context)
       {
 return HomePage();
       }));
+      else
+      print("NULLLLLLLLLLLLLLLLLLLLLLLLL");
   }
 
   else

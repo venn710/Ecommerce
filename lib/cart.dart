@@ -12,6 +12,8 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   bool _load=true;
+  int _quant=1;
+  List<int> fin=[];
   List<Product>_cartresults=[];
   void initState()
   {
@@ -22,21 +24,29 @@ class _CartState extends State<Cart> {
   }
   void getcart()async
   {
-    var response=await get(Uri.parse('https://fresh48.herokuapp.com/cart/${widget.user}'));
+
+    var response=await get(Uri.parse('https://fresh48.herokuapp.com/cart/vee@email.com'));
+    print("https://fresh48.herokuapp.com/cart/${widget.user}");
     var result=jsonDecode(response.body);
     var prods=result[0]['products'];
+    // print(prods);
     for(var item in prods)
     {
-      print(item['brand']);
+      fin.add(item['quantity']);
+      print(item['quantity']);
+      // String brand=item['image'];[]
+      // print(brand);
       _cartresults.add(
         Product(
-          brand: item['brand'],
-          id: item['id'],
-          desc: item['description'],
-          image: item['image'],
+          quant: item['quantity'],
+          brand: item['brand'].toString(),
+          id: item['id'].toString(),
+          desc: item['description'].toString(),
+          image: item['image'].toString(),
           price: item['price'],
           size: item['size'],
           title: item['title'],
+
         )
       );
     }
@@ -61,14 +71,76 @@ class _CartState extends State<Cart> {
                 borderRadius: BorderRadius.circular(20),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical:10),
-                  child: ListTile(
-                    leading:Image.memory(base64Decode(_cartresults[index].image)),
-                    title: Text(_cartresults[index].brand),
-                    subtitle: Text("₹"+_cartresults[index].price.toString()),
-                    trailing: Icon(Icons.delete,
-                    color: Colors.red,
+                  child:Column(
+                    children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        elevation: 10,
+                        // color: Colors.teal,
+                        borderRadius: BorderRadius.circular(20),
+                        child:Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Image.memory(base64Decode(_cartresults[index].image)),
+                            ),),
+                            Expanded(
+                              flex: 4,
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                               Text(_cartresults[index].title),
+                               Text(_cartresults[index].brand),
+                               Text("₹"+((_cartresults[index].price)).toString())
+                              ],
+                            ))
+                          ],
+                        ) 
+                        ),),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Material(
+                      // color: Colors.teal[100],
+                      borderRadius:BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                      child: ButtonBar(
+                        // alignment: MainAxisAlignment.end,
+                        children: [
+                                      FloatingActionButton(
+                                      heroTag: 'btn1',
+                                      mini: true,
+                                      onPressed: ()
+                                      {
+                                        setState(() {
+                                          if(fin[index]>1)
+                                          fin[index]=fin[index]-1;                                        
+                                        });
+                                      },
+                                      child: Icon(Icons.remove,
+                                      size: 20,
+                                      )),
+                            SizedBox(width:2,),
+                            Text(fin[index].toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                            SizedBox(width:2,),
+                            FloatingActionButton(
+                                      heroTag: 'btn2',
+                                      mini: true,
+                                      onPressed: ()
+                                      {
+                                        setState(() {
+                                          fin[index]=fin[index]+1;                                        
+                                        });
+                                      },
+                                      child: Icon(Icons.add)),
+                            Text("Total Price : ₹"+((_cartresults[index].price)*(fin[index])).toString(),style: TextStyle(fontSize: 25),)
+                      ],),
                     ),
-                  ),
+                  )
+                    ],
+                  ) 
                 ),
               ),
             );

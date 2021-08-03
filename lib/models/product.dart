@@ -4,8 +4,10 @@ class Product
 {
   String image,title,desc,id,brand,unique_id;
   int price,size;
+  int quant;  
   Color color;
   Product({
+    this.quant,
     this.unique_id,
     this.color,
     this.brand,
@@ -22,10 +24,11 @@ List<Product> products3=[
   color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
   id:"Women",
   desc:"text",
-  price: 25,
+  price: 2500055,
   image: "assets/images/dress1.jfif",
   size: 12,
-  title: "bags"
+  title: "bags",
+  brand: "Toul House"
   ),
 
 ];
@@ -135,7 +138,7 @@ List<Product> products=[
   color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
   id:"Women",
   desc:"text",
-  price: 25,
+  price: 2500,
   image: "assets/images/bag_1.jfif",
   size: 12,
   title: "bags"
@@ -144,7 +147,7 @@ List<Product> products=[
   color: Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
   id:"Women",
   desc:"text",
-  price: 25,
+  price: 2500000,
   image: "assets/images/bag_1.jfif",
   size: 12,
   title: "bags"

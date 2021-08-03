@@ -108,16 +108,17 @@ setState(() {
 
             ElevatedButton(onPressed:()async
             {
-              // var _coll=widget.db5.collection("products");
-              // await onlycoll.insertOne(
-              var obj={
+              var _obj={
               "brand":brand,
                "id":id,"description":desc,"image":baseimage,"size":size,"title":title,"price":price};
-               var _res=jsonEncode(obj);
-               print(_res);
-               post(Uri.parse('https://fresh48.herokuapp.com/',),body:_res);
+               var _res=jsonEncode(_obj);
+              //  print(_obj);
+               var resuu=await post(Uri.parse("https://fresh48.herokuapp.com/",),body:_res,headers: {
+              "Content-Type": "application/json"
+               });
               // );
-              // print("STARTTTTTTTTTTTTTTTTTTTTT2222222222222222");
+              // var resuu1=(resuu.body);
+              // print(resuu1);
             },
 
             child: Text("ADD"),

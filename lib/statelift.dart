@@ -20,7 +20,7 @@ void initial(int ind) async
     // {
      List<Product> finallist=[];
      var res=await get(Uri.parse("https://fresh48.herokuapp.com/products/Men/${catos[ind]}"));
-    //  print("https://fresh48.herokuapp.com/Men/${catos[ind]}");
+     print("https://fresh48.herokuapp.com/Men/${catos[ind]}");
      print("fetched");
      var finres=await jsonDecode(res.body);
      for (var w in finres)

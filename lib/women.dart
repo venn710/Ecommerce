@@ -1,3 +1,6 @@
+
+import 'package:fresh/screens/Individual.dart';
+
 import 'models/product.dart';
 // import 'util.dart';
 import 'package:flutter/material.dart';
@@ -115,27 +118,30 @@ List diff=[products,products1,products2,products3];
       // print(diff[_finindex].length);
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-           color: diff[_finindex][ind1].color,
-            borderRadius:BorderRadius.circular(20)
+        child: GestureDetector(
+          onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>Indi(p1:diff[_finindex][ind1],))),
+          child: Container(
+            decoration: BoxDecoration(
+             color: diff[_finindex][ind1].color,
+              borderRadius:BorderRadius.circular(20)
+            ),
+            height: 500,
+            width: 100,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical:5.0),
+              child: Column(
+              children: [
+                Expanded(flex:1,child: Text(diff[_finindex][ind1].title)),
+                Expanded(flex:10,child: Image.asset(
+                  diff[_finindex][ind1].image,
+                  fit:BoxFit.fill,
+                  colorBlendMode:BlendMode.darken ,
+                  )),
+              ],
           ),
-          height: 500,
-          width: 100,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical:5.0),
-            child: Column(
-            children: [
-              Expanded(flex:1,child: Text(diff[_finindex][ind1].title)),
-              Expanded(flex:10,child: Image.asset(
-                diff[_finindex][ind1].image,
-                fit:BoxFit.fill,
-                colorBlendMode:BlendMode.darken ,
-                )),
-            ],
+            )
+            ),
         ),
-          )
-          ),
       );
     }
     );
