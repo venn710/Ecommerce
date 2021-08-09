@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fresh/add.dart';
 import 'package:fresh/cart.dart';
 import 'package:fresh/women.dart';
 import 'package:mongo_dart/mongo_dart.dart' show Db;
+import 'package:pointycastle/digests/sha256.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../men.dart';
@@ -72,9 +75,24 @@ backgroundColor: Colors.cyan[100],
                   child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(children: [Icon(Icons.all_inbox),Text("ALL")]),
+                    GestureDetector(
+                      onTap: (){
+                        final passss="venn@213ghjkjmb1";
+            var utfdata=utf8.encode(passss);
+            print(utfdata);
+            final d=new SHA256Digest();
+            var restt=d.process(utfdata);
+
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            print(restt);
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            // var decdata=utf8.decode(restt);
+            // print(decdata);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Column(children: [Icon(Icons.all_inbox),Text("ALL")]),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),

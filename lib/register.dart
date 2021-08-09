@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fresh/login.dart';
 import 'package:fresh/screens/Homescreen.dart';
 import 'package:fresh/women.dart';
 import 'package:http/http.dart';
@@ -118,7 +119,7 @@ class _RegisterState extends State<Register> {
     if(mail!=null && pass!=null)
       Navigator.push(context,MaterialPageRoute(builder: (context)
       {
-return HomePage();
+return Login();
       }));
       else
       print("NULLLLLLLLLLLLLLLLLLLLLLLLL");

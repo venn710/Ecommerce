@@ -155,12 +155,11 @@ class _BottomCardState extends State<BottomCard> {
                                   {
                                     var _obj={
                                       "usermail":"vee@email.com",
-                                      "products":[
+                                      "products":
                                         {
                                       "quantity":quant,
                                       "brand":widget.p2.brand,"id":widget.p2.id,"description":widget.p2.desc,"image":widget.p2.image,"size":widget.p2.size,"title":widget.p2.title,"price":widget.p2.price
                                         }
-                                      ]
                                     };
                                       var _res=jsonEncode(_obj);
                                       print(_res);

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fresh/models/product.dart';
 import 'package:fresh/screens/Individual.dart';
 import 'package:fresh/statelift.dart';
 import 'package:fresh/util.dart';
@@ -13,15 +14,20 @@ class Men extends StatefulWidget {
 }
 
 class _MenState extends State<Men>{
+  List<Product>_jeans=[];
+  List<Product>_shirts=[];
+  List<Product>_footwear=[];
+  List<Product>_hoodies=[];
   @override
   Widget build(BuildContext context) {
+    // print(sha)
     return ChangeNotifierProvider(
-          create:(context)=>LiftState(0),
+          create:(context)=>LiftState(),
           child: SafeArea(
             child: Scaffold(
           body:Column(
             children:
-            [
+            [    
               Expanded(
                 flex: 1,
                 child: Center(child: Text("MEN",style: TextStyle(fontSize:30,color: Colors.lightGreenAccent[400],fontWeight: FontWeight.bold),))),
@@ -101,9 +107,8 @@ class _Cate1State extends State<Cate1> {
               TextButton(
               onPressed: () async
               {
-
-                if(mp[catos[finindex]]==null)
-                finkey.initial(ind);
+                // if(mp[catos[finindex]]==null)
+                // finkey.initial(ind);
                 setState(() {
                   index1=ind;
                   finindex=ind;

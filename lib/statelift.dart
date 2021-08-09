@@ -8,24 +8,59 @@ import 'util.dart';
 class LiftState with ChangeNotifier
 {
   List<Product>jeans=[];
-LiftState(int ind)
+  List<Product>shirts=[];
+  List<Product>footwear=[];
+  List<Product>hoodies=[];
+LiftState()
 {
-  initial(ind);
+  initial();
   notifyListeners();
 }
 
-void initial(int ind) async
+void initial() async
 {
-  //  if(ind==0)
-    // {
-     List<Product> finallist=[];
-     var res=await get(Uri.parse("https://fresh48.herokuapp.com/products/Men/${catos[ind]}"));
-     print("https://fresh48.herokuapp.com/Men/${catos[ind]}");
+      print("Cameeeeeeeeee here");
+     var res=await get(Uri.parse("https://fresh48.herokuapp.com/all"));
      print("fetched");
-     var finres=await jsonDecode(res.body);
+     List finres=await jsonDecode(res.body);
+     print(finres.length);
      for (var w in finres)
      {
-       finallist.add(Product(
+       if(w['title']=='Shirt')
+         shirts.add(Product(
+         title: w['title'],
+         desc: w['description'],
+         id: w['id'],
+         image: w['image'],
+         price: w['price'],
+         size: w['size'],
+         brand: w['brand'],
+         unique_id:w['_id']
+       ));
+        else if(w['title']=='Jeans')
+         jeans.add(Product(
+         title: w['title'],
+         desc: w['description'],
+         id: w['id'],
+         image: w['image'],
+         price: w['price'],
+         size: w['size'],
+         brand: w['brand'],
+         unique_id:w['_id']
+       ));
+        else if(w['title']=='Footwear')
+         footwear.add(Product(
+         title: w['title'],
+         desc: w['description'],
+         id: w['id'],
+         image: w['image'],
+         price: w['price'],
+         size: w['size'],
+         brand: w['brand'],
+         unique_id:w['_id']
+       ));
+        else if(w['title']=='Hoodies')
+        hoodies.add(Product(
          title: w['title'],
          desc: w['description'],
          id: w['id'],
@@ -36,9 +71,11 @@ void initial(int ind) async
          unique_id:w['_id']
        ));
      }
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      mp.update(catos[ind], (value) => finallist);
-
+      mp.update(catos[0], (value) =>jeans);
+      mp.update(catos[1], (value) =>shirts);
+      mp.update(catos[2], (value) =>footwear);
+      mp.update(catos[3], (value) =>hoodies);
+      print(jeans);
       notifyListeners();
     // }
 //     else if(ind==1)

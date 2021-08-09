@@ -5,6 +5,8 @@ import 'package:fresh/screens/Homescreen.dart';
 import 'package:fresh/server.dart';
 import 'package:http/http.dart';
 import './util.dart';
+import "package:pointycastle/export.dart" as encrypter;
+import 'dart:typed_data';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -91,7 +93,16 @@ class _LoginState extends State<Login> {
           {
             final prefs = await SharedPreferences.getInstance();
             prefs.setString('email',mail);
-            prefs.setString('pass', pass);           
+            prefs.setString('pass', pass);        
+            final passss=pass;
+            var utfdata=utf8.encode(passss);
+            final d=new encrypter.SHA256Digest();
+            var restt=d.process(utfdata);
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            print(restt);
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            // final key=Key.Utf8('CBoaDQIQAgceGg8dFAkMDBEOECEZCxgMBiAUFQwKFhg');
+
           Navigator.push(context,MaterialPageRoute(builder: (context)
           {
             return HomePage();
