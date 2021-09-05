@@ -82,27 +82,20 @@ class _LoginState extends State<Login> {
         ),
         ElevatedButton(onPressed:()async
         {
-          String _email;
-          String _pass;
+          final passss=pass;
+            var utfdata=utf8.encode(passss);
+            final d=new encrypter.SHA256Digest();
+            var restt=d.process(utfdata);
           print("Login clicked");
           var _res1=await get(Uri.parse("https://fresh48.herokuapp.com/users"));
           var bod=jsonDecode(_res1.body);
           for(var w in bod)
           {
-            if(w['email']==mail && w['pass']==pass)
+            if(w['email']==mail && w['pass']==restt.toString())
           {
             final prefs = await SharedPreferences.getInstance();
             prefs.setString('email',mail);
-            prefs.setString('pass', pass);        
-            final passss=pass;
-            var utfdata=utf8.encode(passss);
-            final d=new encrypter.SHA256Digest();
-            var restt=d.process(utfdata);
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            print(restt);
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            // final key=Key.Utf8('CBoaDQIQAgceGg8dFAkMDBEOECEZCxgMBiAUFQwKFhg');
-
+            // prefs.setString('pass', pass);        
           Navigator.push(context,MaterialPageRoute(builder: (context)
           {
             return HomePage();

@@ -112,10 +112,17 @@ setState(() {
               "brand":brand,
                "id":id,"description":desc,"image":baseimage,"size":size,"title":title,"price":price};
                var _res=jsonEncode(_obj);
-              //  print(_obj);
-               var resuu=await post(Uri.parse("https://fresh48.herokuapp.com/",),body:_res,headers: {
+               if(id=="Men"){
+               var resuu=await post(Uri.parse("https://fresh48.herokuapp.com/Men",),body:_res,headers: {
               "Content-Type": "application/json"
                });
+               }
+               else
+               {
+                 var resuu=await post(Uri.parse("https://fresh48.herokuapp.com/Women",),body:_res,headers: {
+              "Content-Type": "application/json"
+               });
+               }
               // );
               // var resuu1=(resuu.body);
               // print(resuu1);

@@ -7,5 +7,11 @@ Map<String,List<Product>>mp={
   "Footwear":null,
   "Hoodies":null
 };
+Map<String,List<Product>>wp={
+  "Dresses":null,
+  "Footwear":null,
+  "Jewellary":null,
+  "Handbags":null
+};
 Db onlydb;
 DbCollection onlycoll;

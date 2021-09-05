@@ -7,6 +7,7 @@ import 'package:fresh/login.dart';
 import 'package:fresh/screens/Homescreen.dart';
 import 'package:fresh/women.dart';
 import 'package:http/http.dart';
+import 'package:pointycastle/digests/sha256.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './util.dart';
 import './server.dart';
@@ -103,9 +104,14 @@ class _RegisterState extends State<Register> {
   if(user!=null)
   {
     print("VERIFIED");
+            final passss=pass;
+            var utfdata=utf8.encode(passss);
+            final d=new SHA256Digest();
+            var _restt=d.process(utfdata);
               var _obj={
                 'email':mail,
-                'pass':pass,
+                'pass':_restt.toString(),
+                'isadmin':false,
                 'address':{}
                 };
                var _res=jsonEncode(_obj);
@@ -115,11 +121,10 @@ class _RegisterState extends State<Register> {
     print("doneeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('email',mail);
-        prefs.setString('pass', pass);           
     if(mail!=null && pass!=null)
       Navigator.push(context,MaterialPageRoute(builder: (context)
       {
-return Login();
+return HomePage();
       }));
       else
       print("NULLLLLLLLLLLLLLLLLLLLLLLLL");

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fresh/models/product.dart';
 import 'package:fresh/screens/Individual.dart';
 import 'package:fresh/statelift.dart';
 import 'package:fresh/util.dart';
@@ -14,15 +13,11 @@ class Men extends StatefulWidget {
 }
 
 class _MenState extends State<Men>{
-  List<Product>_jeans=[];
-  List<Product>_shirts=[];
-  List<Product>_footwear=[];
-  List<Product>_hoodies=[];
   @override
   Widget build(BuildContext context) {
     // print(sha)
     return ChangeNotifierProvider(
-          create:(context)=>LiftState(),
+          create:(context)=>LiftState(0),
           child: SafeArea(
             child: Scaffold(
           body:Column(
@@ -34,35 +29,6 @@ class _MenState extends State<Men>{
               Expanded(
                 flex: 10,
                 child: Cate1())
-              // Expanded(
-              //   flex: 10,
-              //   child: Container(
-              //     child: ListView(
-              //       shrinkWrap: true,
-              //       scrollDirection: Axis.vertical,
-              //       children: [
-              //         Text("JIII"),
-              //         SizedBox(height: 100,),
-              //         Text("JIII"),
-              //         SizedBox(height: 100,),
-              //         Text("JIII"),
-              //         SizedBox(height: 100,),
-              //         Text("JIII"),
-              //         SizedBox(height: 100,),
-              //         Text("JIII"),
-              //         SizedBox(height: 100,),
-              //         Text("JIII"),
-              //         SizedBox(height: 100,),
-              //         Text("JIII"),
-              //         Text("JIII"),
-              //         Text("JIII"),
-              //         Text("JIII"),
-              //         Text("JIII")
-              //       ],
-              //      ),
-              //   ),
-              // )
-              // Cate1()
             ]
           ),
 
@@ -78,7 +44,6 @@ class Cate1 extends StatefulWidget {
 
 class _Cate1State extends State<Cate1> {
   int index1=0;
-  // List li=[];
   void initState()
   {
     finindex=0;
@@ -107,8 +72,6 @@ class _Cate1State extends State<Cate1> {
               TextButton(
               onPressed: () async
               {
-                // if(mp[catos[finindex]]==null)
-                // finkey.initial(ind);
                 setState(() {
                   index1=ind;
                   finindex=ind;
@@ -152,7 +115,7 @@ class _MensProductsState extends State<MensProducts> {
   Widget build(BuildContext context) {
     LiftState finkey=Provider.of<LiftState>(context);
     return (mp[catos[finindex]]==null)?Center(child: CircularProgressIndicator(valueColor: _colorTween)):
-    GridView.builder(
+    (mp[catos[finindex]].length==0)?Center(child: Text("No Products are added")):GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 2,
         ),

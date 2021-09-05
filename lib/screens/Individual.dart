@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/payments.dart';
 import 'package:http/http.dart';
+
 class Indi extends StatefulWidget {
   final Product p1;
   Indi({this.p1});
@@ -162,7 +163,7 @@ class _BottomCardState extends State<BottomCard> {
                                         }
                                     };
                                       var _res=jsonEncode(_obj);
-                                      print(_res);
+                                      // print(_res);
                                       await post(Uri.parse('https://fresh48.herokuapp.com/cart',),body:_res,headers: {
                                         "Content-Type": "application/json"
                                       });

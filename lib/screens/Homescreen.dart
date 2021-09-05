@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fresh/add.dart';
 import 'package:fresh/cart.dart';
+import 'package:fresh/footwear.dart';
 import 'package:fresh/women.dart';
 import 'package:mongo_dart/mongo_dart.dart' show Db;
 import 'package:pointycastle/digests/sha256.dart';
@@ -53,7 +54,15 @@ bottom: BorderSide(style:(BorderStyle.solid))
       ),
       drawer: Drawer(
         child: SafeArea(
-          child: Column(
+          child:Padding(
+            padding: const EdgeInsets.only(top:20.0),
+            child: Container(
+              decoration:BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(bottomRight: Radius.circular(20),topRight: Radius.circular(20))
+            ),
+            width:MediaQuery.of(context).size.width/1.3,
+            child:Column(
             children: [
               Text(usermail),
               TextButton(
@@ -61,6 +70,8 @@ bottom: BorderSide(style:(BorderStyle.solid))
                 child: Center(child: Text("Wanna ADD your product"),)),
             ],
           ),
+            ),
+            ), 
         ),
       ),
 backgroundColor: Colors.cyan[100],
@@ -82,10 +93,6 @@ backgroundColor: Colors.cyan[100],
             print(utfdata);
             final d=new SHA256Digest();
             var restt=d.process(utfdata);
-
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            print(restt);
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             // var decdata=utf8.decode(restt);
             // print(decdata);
                       },
@@ -203,20 +210,23 @@ backgroundColor: Colors.cyan[100],
                  Row(
                   children: [
                     Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 200,
-                          decoration:  BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomRight:Radius.circular(80),
-                          bottomLeft: Radius.elliptical(20,50)),
-                        color: Colors.grey[400],
-                          image:DecorationImage(
-                            image: AssetImage('assets/images/bat.jpg')) 
-                      ),
-                          child: Text("Footwear"),
-                      ),
+                        child: GestureDetector(
+                          onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Footwear())),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 200,
+                            decoration:  BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomRight:Radius.circular(80),
+                            bottomLeft: Radius.elliptical(20,50)),
+                          color: Colors.grey[400],
+                            image:DecorationImage(
+                              image: AssetImage('assets/images/bat.jpg')) 
+                                              ),
+                            child: Text("Footwear"),
+                                              ),
+                          ),
                         ),
                     ),
                     Expanded(
@@ -247,6 +257,33 @@ backgroundColor: Colors.cyan[100],
           ],
         ),
       ),
+    );
+  }
+}
+class Mydrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        child: Column(
+          children: [
+            Drawercard()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Drawercard extends StatelessWidget {
+  String imagepath;
+  String title;
+  Drawercard({this.imagepath,this.title});
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.ac_unit),
+      title: Text(title),
     );
   }
 }
