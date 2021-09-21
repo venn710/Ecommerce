@@ -68,6 +68,7 @@ bottom: BorderSide(style:(BorderStyle.solid))
               TextButton(
                 onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Add())),
                 child: Center(child: Text("Wanna ADD your product"),)),
+                
             ],
           ),
             ),
@@ -257,33 +258,6 @@ backgroundColor: Colors.cyan[100],
           ],
         ),
       ),
-    );
-  }
-}
-class Mydrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        child: Column(
-          children: [
-            Drawercard()
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Drawercard extends StatelessWidget {
-  String imagepath;
-  String title;
-  Drawercard({this.imagepath,this.title});
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(Icons.ac_unit),
-      title: Text(title),
     );
   }
 }

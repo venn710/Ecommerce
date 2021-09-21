@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:fresh/screens/Homescreen.dart';
-import 'package:fresh/server.dart';
 import 'package:http/http.dart';
 import './util.dart';
 import "package:pointycastle/export.dart" as encrypter;
@@ -104,7 +103,7 @@ class _LoginState extends State<Login> {
           else
           continue;
           }
-          print("Enter COrrect Details");
+          print(bod);
         } ,
          child: Text("Log In"))
         ],

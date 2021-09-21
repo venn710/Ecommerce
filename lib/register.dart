@@ -10,7 +10,6 @@ import 'package:http/http.dart';
 import 'package:pointycastle/digests/sha256.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './util.dart';
-import './server.dart';
 // import 'package:mongo_dart/mongo_dart.dart';
 class Register extends StatefulWidget {
   @override

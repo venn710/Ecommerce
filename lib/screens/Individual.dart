@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/payments.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Indi extends StatefulWidget {
   final Product p1;
@@ -154,8 +155,9 @@ class _BottomCardState extends State<BottomCard> {
                                 child:GestureDetector(
                                   onTap:() async
                                   {
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
                                     var _obj={
-                                      "usermail":"vee@email.com",
+                                      "usermail":prefs.getString('email'),
                                       "products":
                                         {
                                       "quantity":quant,
