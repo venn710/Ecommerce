@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fresh/models/product.dart';
 import 'package:http/http.dart';
@@ -12,6 +13,7 @@ class Orders extends StatefulWidget {
 
 class _OrdersState extends State<Orders> {
   bool _load=true;
+  bool fl=false;
   List<Product>_orderresults=[];
   void initState()
   {
@@ -23,8 +25,15 @@ class _OrdersState extends State<Orders> {
   {
 
     var response=await get(Uri.parse('https://fresh48.herokuapp.com/orders/${widget.user}'));
-    // print("https://fresh48.herokuapp.com/cart/${widget.user}");
-    var result=jsonDecode(response.body);
+    List result=jsonDecode(response.body);
+    if(result.length==0)
+    {
+      setState(() {
+        _load=false;
+        fl=true;
+      });
+    }
+    else{
     var prods=result[0]['products'];
     for(var item in prods)
     {
@@ -39,6 +48,7 @@ class _OrdersState extends State<Orders> {
           price: item['price'],
           size: item['size'],
           title: item['title'],
+          quant: item['quantity']
         )
       );
     }
@@ -47,37 +57,63 @@ class _OrdersState extends State<Orders> {
           _load=false;
         });
   }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: (_load)?Center(child: CircularProgressIndicator()):ListView.builder
-        (
-          itemCount: _orderresults.length,
-          itemBuilder:(context,index)
-          {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical:8),
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(20),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical:10),
-                  child: ListTile(
-                    // leading:Image.memory(base64Decode(_orderresults[index].image)),
-                    title: Text(_orderresults[index].brand),
-                    subtitle: Text("₹"+_orderresults[index].price.toString()),
-                    trailing: Icon(Icons.delete,
-                    color: Colors.red,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }
-          
-        ),
+      appBar: AppBar(
+        backgroundColor:Color.fromRGBO(220, 20, 60, 1),
+        title: Text("Orders"),
+        centerTitle: true,
       ),
+      body: Container(
+        child: (_load)?Center(child: CircularProgressIndicator()):
+        (fl)?Noorders():ListView(
+          children:
+          _orderresults.map((e){
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Material(
+              borderRadius: BorderRadius.circular(20),
+              elevation: 10,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Image.memory(base64Decode(e.image))),
+                  Expanded(
+                    flex: 4,
+                    child: ListTile(
+                      title: Text(e.title),
+                      subtitle: Text(e.desc),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Quantity:${e.quant}"),
+                          SizedBox(height: 4,),
+                          Text("Price:${e.price}"),
+                          SizedBox(height: 4,),
+                          Text("Total :"+(e.quant*e.price).toString(),style: TextStyle(fontWeight: FontWeight.bold),),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+        )
+      ),
+    );
+  }
+}
+class Noorders extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text("You have no orders"),),
     );
   }
 }

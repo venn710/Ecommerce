@@ -184,7 +184,7 @@ class _BottomCardState extends State<BottomCard> {
                               Expanded(
                                 flex: 5,
                                 child:GestureDetector(
-                                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Paymants(data:widget.p2))),
+                                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Paymants(data:Product(brand: widget.p2.brand,desc: widget.p2.desc,price: widget.p2.price,title: widget.p2.title,id: widget.p2.id,image: widget.p2.image,size: widget.p2.size,quant:quant)))),
                                   child: Material(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(30),child: Padding(

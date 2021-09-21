@@ -71,6 +71,11 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Cart"),
+        centerTitle: true,
+        backgroundColor: Color.fromRGBO(220, 20, 60,0.6),
+      ),
       body: Container(
         child: (_load)?Center(child: CircularProgressIndicator()):
         (fl)?Noitems():

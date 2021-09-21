@@ -1,11 +1,16 @@
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fresh/add.dart';
+import 'package:fresh/address.dart';
 import 'package:fresh/cart.dart';
 import 'package:fresh/footwear.dart';
+import 'package:fresh/orders.dart';
 import 'package:fresh/women.dart';
+import 'package:http/http.dart';
 import 'package:mongo_dart/mongo_dart.dart' show Db;
 import 'package:pointycastle/digests/sha256.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +23,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String usermail='';
+  bool _loader=false;
+  List finres;
   void initState()
   {
     super.initState();
@@ -49,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           child: Image.asset('assets/images/cart3.png'))
       ],
       shape: Border(
-bottom: BorderSide(style:(BorderStyle.solid))
+      bottom: BorderSide(style:(BorderStyle.solid))
       ),
       ),
       drawer: Drawer(
@@ -68,7 +75,30 @@ bottom: BorderSide(style:(BorderStyle.solid))
               TextButton(
                 onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Add())),
                 child: Center(child: Text("Wanna ADD your product"),)),
-                
+                GestureDetector(
+                  onTap: ()=>Navigator.of(context).pop(),
+                  child: Drawercard(imgpath: 'assets/images/home.png',name: "HOME",)),
+                GestureDetector(
+                  onTap: ()async{
+                    setState(() {
+                      _loader=true;
+                    });
+                    
+                    var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/$usermail'));
+                    finres=jsonDecode(res.body);
+                    setState(() {
+                      _loader=false;
+                    });
+                  Navigator.push(context,MaterialPageRoute(builder: (context){
+                    return AddressDetails(fun: null,li:finres);
+                    }));},
+                  child: Drawercard(imgpath: 'assets/images/home-address.png',name: "ADDRESS",)),
+                GestureDetector(
+                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Orders(user:usermail),)),
+                  child: Drawercard(imgpath: 'assets/images/order.png',name: "ORDERS",)),
+                GestureDetector(
+                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Cart(user:usermail),)),
+                  child: Drawercard(imgpath: 'assets/images/carts.png',name: "CART",)),
             ],
           ),
             ),
@@ -76,52 +106,10 @@ bottom: BorderSide(style:(BorderStyle.solid))
         ),
       ),
 backgroundColor: Colors.cyan[100],
-      body:SafeArea(
+      body:(_loader)?CircularProgressIndicator():SafeArea(
               child: ListView(
           children: [
-            Container(
-              color: Colors.cyan[100],
-              height:60,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        final passss="venn@213ghjkjmb1";
-            var utfdata=utf8.encode(passss);
-            print(utfdata);
-            final d=new SHA256Digest();
-            var restt=d.process(utfdata);
-            // var decdata=utf8.decode(restt);
-            // print(decdata);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Column(children: [Icon(Icons.all_inbox),Text("ALL")]),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(children: [Icon(Icons.all_inbox),Text("Men")]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(children: [Icon(Icons.all_inbox),Text("Women")]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(children: [Icon(Icons.all_inbox),Text("Electronics")]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(children: [Icon(Icons.all_inbox),Text("Furniture")]),
-                    ),
-                  ],
-              ),
-                ),
-            ),
+            SizedBox(height: 20,),
             CarouselSlider(
               items: [
                 Container(
@@ -257,6 +245,22 @@ backgroundColor: Colors.cyan[100],
 
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Drawercard extends StatelessWidget {
+  String imgpath;
+  String name;
+  Drawercard({this.imgpath,this.name});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        leading: Image.asset(imgpath),
+        title: Text(name,style:TextStyle(fontSize: 18,fontWeight: FontWeight.bold))
       ),
     );
   }

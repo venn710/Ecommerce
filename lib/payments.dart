@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fresh/address.dart';
 import 'package:fresh/models/product.dart';
 import 'package:http/http.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+SharedPreferences _Prefs;
 class Paymants extends StatefulWidget {
   Product data;
   Paymants({this.data});
@@ -15,7 +17,6 @@ class Paymants extends StatefulWidget {
 
 class _PaymantsState extends State<Paymants> {
   String hno,state,district,mobileno,name,village;
-      SharedPreferences _Prefs;
   final _formKey = GlobalKey<FormState>();
   Razorpay _razorpay;
   bool fl;
@@ -30,15 +31,23 @@ class _PaymantsState extends State<Paymants> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,externaleventhandler);
     getaddress();
   }
+  void showInSnackbar(BuildContext ctx)
+  {
+    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Uh-oh!Seems like you have not added address yet')));
+  }
   void getaddress()async{
-    var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/testingforaddressfin10@gmail.com'));
+    _Prefs=await SharedPreferences.getInstance();
+    var _str=_Prefs.getString('email');
+    var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/$_str'));
     resp1=jsonDecode(res.body);
-    print("###################################################################");
     if(resp1.length==0)
+    {
+    showInSnackbar(context);
     setState(() {
       fl=true;
       _loader=false;
     });
+    }
     else
     setState(() {
       fl=false;
@@ -59,7 +68,7 @@ class _PaymantsState extends State<Paymants> {
       "usermail":_Prefs.getString('email'),
       "products":[
       {
-      "brand":widget.data.brand,"id":widget.data.id,"description":widget.data.desc,"image":widget.data.image,"size":widget.data.size,"title":widget.data.title,"price":widget.data.price
+      "brand":widget.data.brand,"id":widget.data.id,"description":widget.data.desc,"image":widget.data.image,"size":widget.data.size,"title":widget.data.title,"price":widget.data.price,"quantity":widget.data.quant
       }
       ]
       };
@@ -88,7 +97,7 @@ class _PaymantsState extends State<Paymants> {
     var response=await http.post(Uri.parse(url),   
     headers: {"content-type":"application/json","authorization":basicAuth},
     body:jsonEncode({
-    "amount": (widget.data.price)*100,
+    "amount": (widget.data.price*widget.data.quant)*100,
     "currency": "INR",
     "receipt": "rcptid_2021"
   }),
@@ -131,164 +140,147 @@ var img=(base64Decode(widget.data.image)).toString();
   Widget build(BuildContext context) {
     return Scaffold(
       body: (_loader)?CircularProgressIndicator():SafeArea(
-        child: (fl)?ListView(
-          children: [
-            Text("IT seems you have not added any address addd now"),
-            Form(
-              key: _formKey,
-              child:Column(
+        child: (fl)?SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ListView(
               children: [
-          TextFormField(
-          style: TextStyle(color:Colors.black),
-          textAlign: TextAlign.center,
-          validator: (value)
-          {
-            if(value==null || value.isEmpty)
-            return 'Please Enter required fields';
-            return null;
-          },
-          onChanged: (value) {
-            if(value!=null){
-              hno=value;
-            }
-            //Do something with the user input.
-          },
-          decoration: DECORATION("Enter Your H NO"),
-        ),
-                  TextFormField(
-          style: TextStyle(color:Colors.black),
-          textAlign: TextAlign.center,
-          validator: (value)
-          {
-            if(value==null || value.isEmpty)
-            return 'Please Enter required fields';
-            return null;
-          },
-          onChanged: (value) {
-            if(value!=null){
-              hno=value;
-            }
-            //Do something with the user input.
-          },
-          decoration: DECORATION("ENter Your Name"),
-        ),
-                  TextFormField(
-          style: TextStyle(color:Colors.black),
-          textAlign: TextAlign.center,
-          validator: (value)
-          {
-            if(value==null || value.isEmpty)
-            return 'Please Enter required fields';
-            return null;
-          },
-          onChanged: (value) {
-            if(value!=null){
-              name=value;
-            }
-            //Do something with the user input.
-          },
-          decoration: DECORATION("ENter Your Mobile number"),
-        ),
-                  TextFormField(
-          style: TextStyle(color:Colors.black),
-          textAlign: TextAlign.center,
-          validator: (value)
-          {
-            if(value==null || value.isEmpty)
-            return 'Please Enter required fields';
-            return null;
-          },
-          onChanged: (value) {
-            if(value!=null){
-              mobileno=value;
-            }
-            //Do something with the user input.
-          },
-          decoration: DECORATION("ENter Your villagename"),
-        ),
-                  TextFormField(
-          style: TextStyle(color:Colors.black),
-          textAlign: TextAlign.center,
-          validator: (value)
-          {
-            if(value==null || value.isEmpty)
-            return 'Please Enter required fields';
-            return null;
-          },
-          onChanged: (value) {
-            if(value!=null){
-              village=value;
-            }
-            //Do something with the user input.
-          },
-          decoration: DECORATION("ENter Your District Name"),
-        ),
-          TextFormField(
-          style: TextStyle(color:Colors.black),
-          textAlign: TextAlign.center,
-          validator: (value)
-          {
-            if(value==null || value.isEmpty)
-            return 'Please Enter required fields';
-            return null;
-          },
-          onChanged: (value) {
-            if(value!=null){
-              district=value;
-            }
-            //Do something with the user input.
-          },
-          decoration: DECORATION("ENter Your State"),
-        )
-              ],
-            )),
-            Container(
-            child: ElevatedButton(child: Text("Save and PAYYYYYYYYYYYYY"),onPressed:()async
-            {
-              if(_formKey.currentState.validate())
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("IT seems you have not added any address add now",textAlign: TextAlign.center,),
+                ),
+                Form(
+                  key: _formKey,
+                  child:Column(
+                  children: [
+              TextFormField(
+              style: TextStyle(color:Colors.black),
+              validator: (value)
               {
-                   var _obj={
-                  "usermail":"testingforaddressfin10@gmail.com",
-                  "address":
-                  {
-                    "HNO":hno,
-                    "Village":village,
-                    "State":state,
-                    "District":district,
-                    "Mobile NUmber":mobileno,
-                    "Name":name
-                  }
-                   };
-                    var _res=jsonEncode(_obj);
-                    print(_res);
-                    var resss=await post(Uri.parse('https://fresh48.herokuapp.com/address',),body:_res,headers: {
-                    "Content-Type": "application/json"
-                    });
-                    // print(jsonDecode(resss.body));
-                    print("ADDRESS posted");
-                _pay();
-              }
-            },),
-          ),]
-        ):Column(
-          children: [
-            Material(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.cyan,
-              child: Column(
-                children: [
-                  Rowcard(resp2: resp1,st1: "HNO",),
-                  Rowcard(resp2: resp1,st1:"Village"),
-                  Rowcard(resp2: resp1,st1: "State",),
-                  Rowcard(resp2: resp1,st1: "District",),
-                  Rowcard(resp2: resp1,st1: "Mobile NUmber",),
-                  Rowcard(resp2: resp1,st1: "Name",),
-                ],
-              ),
+                if(value==null || value.isEmpty)
+                return 'Please Enter required fields';
+                return null;
+              },
+              onChanged: (value) {
+                if(value!=null){
+                  hno=value;
+                }
+              },
+              decoration: DECORATION("Enter Your H NO"),
             ),
-            ElevatedButton(onPressed: _pay, child:Text("PAYYYY"))
-          ],
-        ),
+            SizedBox(height: 10,),
+                      TextFormField(
+              style: TextStyle(color:Colors.black),
+              validator: (value)
+              {
+                if(value==null || value.isEmpty)
+                return 'Please Enter required fields';
+                return null;
+              },
+              onChanged: (value) {
+                if(value!=null){
+                  name=value;
+                }
+              },
+              decoration: DECORATION("Enter Your Name"),
+            ),
+            SizedBox(height: 10,),
+                      TextFormField(
+              style: TextStyle(color:Colors.black),
+              validator: (value)
+              {
+                if(value==null || value.isEmpty)
+                return 'Please Enter required fields';
+                return null;
+              },
+              onChanged: (value) {
+                if(value!=null){
+                  mobileno=value;
+                }
+              },
+              decoration: DECORATION("Enter Your Mobile number"),
+            ),
+            SizedBox(height: 10,),
+                      TextFormField(
+              style: TextStyle(color:Colors.black),
+              validator: (value)
+              {
+                if(value==null || value.isEmpty)
+                return 'Please Enter required fields';
+                return null;
+              },
+              onChanged: (value) {
+                if(value!=null){
+                  village=value;
+                }
+              },
+              decoration: DECORATION("Enter Your villagename"),
+            ),
+            SizedBox(height: 10,),
+                      TextFormField(
+              style: TextStyle(color:Colors.black),
+              validator: (value)
+              {
+                if(value==null || value.isEmpty)
+                return 'Please Enter required fields';
+                return null;
+              },
+              onChanged: (value) {
+                if(value!=null){
+                  district=value;
+                }
+              },
+              decoration: DECORATION("Enter Your District Name"),
+            ),
+            SizedBox(height: 10,),
+              TextFormField(
+              style: TextStyle(color:Colors.black),
+              validator: (value)
+              {
+                if(value==null || value.isEmpty)
+                return 'Please Enter required fields';
+                return null;
+              },
+              onChanged: (value) {
+                if(value!=null){
+                  state=value;
+                }
+              },
+              decoration: DECORATION("Enter Your State"),
+            )
+                  ],
+                )),
+                Container(
+                child: ElevatedButton(child: Text("Save and PAY"),onPressed:()async
+                {
+                  if(_formKey.currentState.validate())
+                  {
+                       var _obj={
+                      "usermail":_Prefs.getString('email'),
+                      "address":
+                      {
+                        "HNO":hno,
+                        "Village":village,
+                        "State":state,
+                        "District":district,
+                        "Mobile NUmber":mobileno,
+                        "Name":name
+                      }
+                       };
+                        var _res=jsonEncode(_obj);
+                        print(_res);
+                        var resss=await post(Uri.parse('https://fresh48.herokuapp.com/address',),body:_res,headers: {
+                        "Content-Type": "application/json"
+                        });
+                        // print(jsonDecode(resss.body));
+                        print("ADDRESS posted");
+                    _pay();
+                  }
+                },),
+              ),]
+            ),
+          ),
+        ):AddressDetails(li:resp1,fun:_pay)
       ),
     );
   }
@@ -311,24 +303,6 @@ var img=(base64Decode(widget.data.image)).toString();
             borderRadius: BorderRadius.all(Radius.circular(32.0)),
           ),
         );
-  }
-}
-
-class Rowcard extends StatelessWidget {
-  String st1;
-  List resp2;
-  Rowcard({this.st1,this.resp2});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Text(st1),
-          Text('  :  '+resp2[0]['address'][st1]),
-        ],
-      ),
-    );
   }
 }
 class Address {
