@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       _loader=true;
                     });
-                    
+
                     var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/$usermail'));
                     finres=jsonDecode(res.body);
                     setState(() {
@@ -109,32 +109,54 @@ backgroundColor: Colors.cyan[100],
       body:(_loader)?CircularProgressIndicator():SafeArea(
               child: ListView(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 50,),
             CarouselSlider(
               items: [
-                Container(
+                Column(
+                  children:
+                  [
+                    Expanded(
+                      flex:5,
+                      child:Container(
                 margin: EdgeInsets.only(left:6.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
+                  color:Color.fromRGBO(220,20,60,1),
                   image: DecorationImage(
-                    image: AssetImage('assets/images/bat.jpg'),
+                    image: AssetImage('assets/images/beard.png'),
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
+                    ),
+                    Expanded(child:Text("Men"))
+                  ]
+                ),
                 Container(
                 margin: EdgeInsets.all(6.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
+                  color:Color.fromRGBO(220,20,60,1),                  
                   image: DecorationImage(
-                    image: AssetImage('assets/images/dress1.jfif'),
+                    image: AssetImage('assets/images/woman.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(6.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  color:Color.fromRGBO(220,20,60,1),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/footwear.png'),
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
               ],
               options: CarouselOptions(
-              height: 180.0,
+              height: 220,
               enlargeCenterPage: true,
               autoPlay: true,
               aspectRatio: 16 / 9,
@@ -162,14 +184,10 @@ backgroundColor: Colors.cyan[100],
                             child: Container(
                               height: 200,
                             decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomRight:Radius.circular(80),
-                          bottomLeft: Radius.elliptical(20,50)),
                         color: Colors.grey[400],
                           image:DecorationImage(
-                            image: AssetImage('assets/images/bat.jpg')) 
+                            image: AssetImage('assets/images/beard.png')) 
                       ),
-                            child: Text("For men"),
                       ),
                           ),
                         ),
@@ -182,14 +200,10 @@ backgroundColor: Colors.cyan[100],
                           child: Container(
                           height: 200,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomRight:Radius.elliptical(20,50),
-                          bottomLeft: Radius.circular(80)),
                         color: Colors.grey[400],
                           image:DecorationImage(
-                            image: AssetImage('assets/images/bat.jpg')) 
+                            image: AssetImage('assets/images/woman.png')) 
                       ),
-                      child: Text("For women"),
                           ),
                         ),
                     ),
@@ -206,35 +220,14 @@ backgroundColor: Colors.cyan[100],
                             child: Container(
                               height: 200,
                             decoration:  BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            bottomRight:Radius.circular(80),
-                            bottomLeft: Radius.elliptical(20,50)),
                           color: Colors.grey[400],
                             image:DecorationImage(
-                              image: AssetImage('assets/images/bat.jpg')) 
+                              image: AssetImage('assets/images/footwear.png')) 
                                               ),
-                            child: Text("Footwear"),
                                               ),
                           ),
                         ),
                     ),
-                    Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 200,
-                          decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomRight:Radius.elliptical(20,50),
-                          bottomLeft: Radius.circular(80)),
-                        color: Colors.grey[400],
-                          image:DecorationImage(
-                            image: AssetImage('assets/images/bat.jpg')) 
-                      ),
-                          child: Text("Furniture"),
-                      ),
-                        ),
-                    )
                   ],
                 )
               ],
