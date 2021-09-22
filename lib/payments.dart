@@ -40,31 +40,6 @@ class _PaymantsState extends State<Paymants> {
     });
 
   }
-  // void showInSnackbar(BuildContext ctx)
-  // {
-  //   ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Uh-oh!Seems like you have not added address yet')));
-  // }
-  // void getaddress()async{
-  //   _Prefs=await SharedPreferences.getInstance();
-  //   var _str=_Prefs.getString('email');
-  //   var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/$_str'));
-  //   resp1=jsonDecode(res.body);
-  //   if(resp1.length==0)
-  //   {
-  //   showInSnackbar(context);
-  //   setState(() {
-  //     fl=true;
-  //     _loader=false;
-  //   });
-  //   }
-  //   else
-  //   setState(() {
-  //     fl=false;
-  //     _loader=false;
-  //   });
-  //   print(resp1);
-  //   print("###################################################################");
-  // }
   void paymentsuccesshandler(PaymentSuccessResponse res) async
   {
     final FlutterSecureStorage storage = FlutterSecureStorage();
