@@ -21,12 +21,16 @@ class _OrdersState extends State<Orders> {
     getorders();
 
   }
+  void dispose()
+  {
+    super.dispose();
+  }
   void getorders()async
   {
 
     var response=await get(Uri.parse('https://fresh48.herokuapp.com/orders/${widget.user}'));
     List result=jsonDecode(response.body);
-    if(result.length==0)
+    if(result.length==0 && mounted)
     {
       setState(() {
         _load=false;
@@ -53,6 +57,7 @@ class _OrdersState extends State<Orders> {
       );
     }
     print(result[0]['usermail']);
+    if(mounted)
     setState(() {
           _load=false;
         });

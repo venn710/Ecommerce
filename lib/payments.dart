@@ -16,10 +16,9 @@ class Paymants extends StatefulWidget {
 }
 
 class _PaymantsState extends State<Paymants> {
-  String hno,state,district,mobileno,name,village;
-  final _formKey = GlobalKey<FormState>();
   Razorpay _razorpay;
   bool fl;
+  String _username;
   bool _loader=true;
   List resp1=[];
   @override
@@ -29,33 +28,43 @@ class _PaymantsState extends State<Paymants> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,paymentsuccesshandler);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,paymentfailurehandler);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,externaleventhandler);
-    getaddress();
+    getuname();
   }
-  void showInSnackbar(BuildContext ctx)
+  void getuname() async
   {
-    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Uh-oh!Seems like you have not added address yet')));
-  }
-  void getaddress()async{
     _Prefs=await SharedPreferences.getInstance();
-    var _str=_Prefs.getString('email');
-    var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/$_str'));
-    resp1=jsonDecode(res.body);
-    if(resp1.length==0)
-    {
-    showInSnackbar(context);
+    var str=_Prefs.getString('email');
     setState(() {
-      fl=true;
       _loader=false;
+      _username=str;
     });
-    }
-    else
-    setState(() {
-      fl=false;
-      _loader=false;
-    });
-    print(resp1);
-    print("###################################################################");
+
   }
+  // void showInSnackbar(BuildContext ctx)
+  // {
+  //   ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Uh-oh!Seems like you have not added address yet')));
+  // }
+  // void getaddress()async{
+  //   _Prefs=await SharedPreferences.getInstance();
+  //   var _str=_Prefs.getString('email');
+  //   var res=await get(Uri.parse('https://fresh48.herokuapp.com/address/$_str'));
+  //   resp1=jsonDecode(res.body);
+  //   if(resp1.length==0)
+  //   {
+  //   showInSnackbar(context);
+  //   setState(() {
+  //     fl=true;
+  //     _loader=false;
+  //   });
+  //   }
+  //   else
+  //   setState(() {
+  //     fl=false;
+  //     _loader=false;
+  //   });
+  //   print(resp1);
+  //   print("###################################################################");
+  // }
   void paymentsuccesshandler(PaymentSuccessResponse res) async
   {
     final FlutterSecureStorage storage = FlutterSecureStorage();
@@ -139,171 +148,12 @@ var img=(base64Decode(widget.data.image)).toString();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (_loader)?CircularProgressIndicator():SafeArea(
-        child: (fl)?SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("IT seems you have not added any address add now",textAlign: TextAlign.center,),
-                ),
-                Form(
-                  key: _formKey,
-                  child:Column(
-                  children: [
-              TextFormField(
-              style: TextStyle(color:Colors.black),
-              validator: (value)
-              {
-                if(value==null || value.isEmpty)
-                return 'Please Enter required fields';
-                return null;
-              },
-              onChanged: (value) {
-                if(value!=null){
-                  hno=value;
-                }
-              },
-              decoration: DECORATION("Enter Your H NO"),
-            ),
-            SizedBox(height: 10,),
-                      TextFormField(
-              style: TextStyle(color:Colors.black),
-              validator: (value)
-              {
-                if(value==null || value.isEmpty)
-                return 'Please Enter required fields';
-                return null;
-              },
-              onChanged: (value) {
-                if(value!=null){
-                  name=value;
-                }
-              },
-              decoration: DECORATION("Enter Your Name"),
-            ),
-            SizedBox(height: 10,),
-                      TextFormField(
-              style: TextStyle(color:Colors.black),
-              validator: (value)
-              {
-                if(value==null || value.isEmpty)
-                return 'Please Enter required fields';
-                return null;
-              },
-              onChanged: (value) {
-                if(value!=null){
-                  mobileno=value;
-                }
-              },
-              decoration: DECORATION("Enter Your Mobile number"),
-            ),
-            SizedBox(height: 10,),
-                      TextFormField(
-              style: TextStyle(color:Colors.black),
-              validator: (value)
-              {
-                if(value==null || value.isEmpty)
-                return 'Please Enter required fields';
-                return null;
-              },
-              onChanged: (value) {
-                if(value!=null){
-                  village=value;
-                }
-              },
-              decoration: DECORATION("Enter Your villagename"),
-            ),
-            SizedBox(height: 10,),
-                      TextFormField(
-              style: TextStyle(color:Colors.black),
-              validator: (value)
-              {
-                if(value==null || value.isEmpty)
-                return 'Please Enter required fields';
-                return null;
-              },
-              onChanged: (value) {
-                if(value!=null){
-                  district=value;
-                }
-              },
-              decoration: DECORATION("Enter Your District Name"),
-            ),
-            SizedBox(height: 10,),
-              TextFormField(
-              style: TextStyle(color:Colors.black),
-              validator: (value)
-              {
-                if(value==null || value.isEmpty)
-                return 'Please Enter required fields';
-                return null;
-              },
-              onChanged: (value) {
-                if(value!=null){
-                  state=value;
-                }
-              },
-              decoration: DECORATION("Enter Your State"),
-            )
-                  ],
-                )),
-                Container(
-                child: ElevatedButton(child: Text("Save and PAY"),onPressed:()async
-                {
-                  if(_formKey.currentState.validate())
-                  {
-                       var _obj={
-                      "usermail":_Prefs.getString('email'),
-                      "address":
-                      {
-                        "HNO":hno,
-                        "Village":village,
-                        "State":state,
-                        "District":district,
-                        "Mobile NUmber":mobileno,
-                        "Name":name
-                      }
-                       };
-                        var _res=jsonEncode(_obj);
-                        print(_res);
-                        var resss=await post(Uri.parse('https://fresh48.herokuapp.com/address',),body:_res,headers: {
-                        "Content-Type": "application/json"
-                        });
-                        // print(jsonDecode(resss.body));
-                        print("ADDRESS posted");
-                    _pay();
-                  }
-                },),
-              ),]
-            ),
-          ),
-        ):AddressDetails(li:resp1,fun:_pay)
+      body:(_loader)?Center(child: CircularProgressIndicator()):SafeArea(
+        child:AddressDetails(fun: _pay,uname:_username,)
       ),
     );
   }
 
-  InputDecoration DECORATION(String text) {
-    return InputDecoration(
-          hintText: text,
-          hintStyle: TextStyle(color:Colors.black),
-          contentPadding:
-              EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32.0)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueAccent, width: 1.0),
-            borderRadius: BorderRadius.all(Radius.circular(32.0)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
-            borderRadius: BorderRadius.all(Radius.circular(32.0)),
-          ),
-        );
-  }
 }
 class Address {
 @required String hno;

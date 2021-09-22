@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:fresh/login.dart';
 import 'package:fresh/register.dart';
 class welcome extends StatefulWidget {
@@ -10,6 +12,7 @@ class _welcomeState extends State<welcome> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      backgroundColor: Color.fromRGBO(40,80,160, 1),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -21,18 +24,18 @@ class _welcomeState extends State<welcome> {
                 Hero(
                     tag: 'logo',
                     child: Container(
-                    child: Image.asset('assets/images/bat.jpg'),
+                    child: Image.asset('assets/images/online-shopping.png'),
                     height: 200,
                   ),
                 ),
-                Text("Flash Chat"),
+                Text("ECOMMERCE",style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),),
               ],
             ),
             SizedBox(
               height: 48.0,
             ),
-            Buttons(rt:'1',col: Colors.grey[900],name: 'Log In',),
-            Buttons(rt:'2',col: Colors.blueAccent,name: 'Register',),
+            Buttons(rt:'1',col: Color.fromRGBO(235, 66, 63, 1),name: 'Log In',),
+            Buttons(rt:'2',col: Color.fromRGBO(247, 176, 48,1),name: 'Register',),
            
           ],
         ),
@@ -71,7 +74,7 @@ Buttons({this.rt,this.col,this.name});
           minWidth: 200.0,
           height: 42.0,
           child: Text(
-            name,
+            name,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
           ),
         ),
       ),

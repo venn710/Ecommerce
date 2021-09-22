@@ -13,6 +13,10 @@ class Men extends StatefulWidget {
 }
 
 class _MenState extends State<Men>{
+  void dispose()
+  {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     // print(sha)
@@ -72,6 +76,7 @@ class _Cate1State extends State<Cate1> {
               TextButton(
               onPressed: () async
               {
+                if(mounted)
                 setState(() {
                   index1=ind;
                   finindex=ind;
@@ -141,10 +146,10 @@ class _MensProductsState extends State<MensProducts> {
           padding: const EdgeInsets.symmetric(vertical:5.0),
           child: Column(
           children: [
-            Expanded(flex: 1,child:Text(mp[catos[finindex]][ind1].unique_id)),
+            Expanded(flex:10,child:Image.memory(base64Decode(mp[catos[finindex]][ind1].image))),
+            Expanded(flex: 1,child:Text(mp[catos[finindex]][ind1].brand)),
             Expanded(flex:1,child: Text(mp[catos[finindex]][ind1].title)),
-            Expanded(flex:10,child:Image.memory(base64Decode(mp[catos[finindex]][ind1].image))
-              ),
+            Expanded(flex:1,child: Text("₹"+mp[catos[finindex]][ind1].price.toString())),
           ],
     ),
       )

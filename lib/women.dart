@@ -14,6 +14,10 @@ class Women extends StatefulWidget {
 }
 
 class _WomenState extends State<Women> {
+  void dispose()
+  {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -67,6 +71,7 @@ class _CateState extends State<Cate> {
               TextButton(
               onPressed: ()
               {
+                if(mounted)
                 setState(() {
                   _index=ind;
                   _finindex=ind;
@@ -135,10 +140,10 @@ class _ProdsState extends State<Prods> {
           padding: const EdgeInsets.symmetric(vertical:5.0),
           child: Column(
           children: [
-            Expanded(flex: 1,child:Text(wp[_catos[_finindex]][ind1].unique_id)),
+            Expanded(flex:10,child:Image.memory(base64Decode(wp[_catos[_finindex]][ind1].image))),
+            Expanded(flex:1,child: Text(wp[_catos[_finindex]][ind1].brand)),
             Expanded(flex:1,child: Text(wp[_catos[_finindex]][ind1].title)),
-            Expanded(flex:10,child:Image.memory(base64Decode(wp[_catos[_finindex]][ind1].image))
-              ),
+            Expanded(flex:1,child: Text("₹"+wp[_catos[_finindex]][ind1].price.toString())),
           ],
     ),
       )

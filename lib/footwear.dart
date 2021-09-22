@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/screens/Individual.dart';
 import 'package:fresh/util.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 class Footwear extends StatefulWidget {
   @override
@@ -13,11 +15,20 @@ class Footwear extends StatefulWidget {
 
 class _FootwearState extends State<Footwear> {
   List<Product>_finalproducts=[];
+  List<Product>_temp=[];
+  List<Product>_temp1=[];
+  bool _loader=true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getfootwear();
+  }
+  @override
+  void dispose()
+  {
+  _temp=[];
+  _temp1=[];
+  super.dispose();
   }
   getfootwear()async{
     if(mp['Footwear']==null)
@@ -25,76 +36,111 @@ class _FootwearState extends State<Footwear> {
       print("Mennnnnnnnnn");
       var _res1= await get(Uri.parse('https://fresh48.herokuapp.com/products/Men/Footwear'));
       var _resp1=jsonDecode(_res1.body);
-      _finalproducts.add(
+      for(var data in _resp1)
+      {
+        _temp.add(
         Product(
-         title: _resp1[0]['title'],
-         desc: _resp1[0]['description'],
-         id: _resp1[0]['id'],
-         image: _resp1[0]['image'],
-         price: _resp1[0]['price'],
-         size: _resp1[0]['size'],
-         brand: _resp1[0]['brand'],
-         unique_id:_resp1[0]['_id']
+         title: data['title'],
+         desc: data['description'],
+         id: data['id'],
+         image: data['image'],
+         price: data['price'],
+         size: data['size'],
+         brand: data['brand'],
+         unique_id:data['_id']
        )
       );
+      }
+      mp.update("Footwear", (value) =>_temp);
     }
     if(wp['Footwear']==null)
     {
       print("WoMennnnnnnnnn");
       var _res2= await get(Uri.parse('https://fresh48.herokuapp.com/products/Women/Footwear'));
       var _resp2=jsonDecode(_res2.body);
-      // print(_resp2);
-      _finalproducts.add(
+      for(var _data in _resp2)
+      {
+        _temp1.add(
         Product(
-         title: _resp2[0]['title'],
-         desc: _resp2[0]['description'],
-         id: _resp2[0]['id'],
-         image: _resp2[0]['image'],
-         price: _resp2[0]['price'],
-         size: _resp2[0]['size'],
-         brand: _resp2[0]['brand'],
-         unique_id:_resp2[0]['_id']
+         title: _data['title'],
+         desc: _data['description'],
+         id: _data['id'],
+         image: _data['image'],
+         price: _data['price'],
+         size: _data['size'],
+         brand: _data['brand'],
+         unique_id:_data['_id']
        )
       );
+      }
+      wp.update("Footwear", (value) =>_temp1);
+      print(wp['Footwear']);
+      print(mp['Footwear']);
     }
+    if(wp["Footwear"].length!=0 && mp["Footwear"].length!=0)
+{ 
+  print("came here");
+  if(mounted )  
+  setState(() {
+      _loader=false;
+     _finalproducts.addAll(wp['Footwear']);
+     _finalproducts.addAll(mp['Footwear']);
+          print(_finalproducts.length);
+    });
+  }
   }
   @override
   Widget build(BuildContext context) {
-    return (_finalproducts.length==0)?CircularProgressIndicator():GridView.builder(
-      gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2,
-        ),
-        itemCount: _finalproducts.length,
-      itemBuilder:(context,ind2)
-      {
-        return GestureDetector(
-          onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)
-          {
-            return Indi(p1:_finalproducts[ind2]);
-          })),
-          child: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      decoration: BoxDecoration(
-          borderRadius:BorderRadius.circular(20)
-      ),
-      height: 800,
-      width: 100,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical:5.0),
-          child: Column(
+    return Scaffold(
+      body:(_loader)?Center(child: CircularProgressIndicator()):SafeArea(
+        child: Column(
           children: [
-            // Expanded(flex: 1,child:Text(wp[_catos[_finindex]][ind1].unique_id)),
-            // Expanded(flex:1,child: Text(wp[_catos[_finindex]][ind1].title)),
-            // Expanded(flex:10,child:Image.memory(base64Decode(wp[_catos[_finindex]][ind1].image))
-              // ),
+            Expanded(child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("FOOTWEAR",style: TextStyle(color: Color.fromRGBO(220, 60, 20, 1), fontSize:30,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+            )),
+            Expanded(
+              flex:10,
+              child: GridView.builder(
+              gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+                ),
+                itemCount: _finalproducts.length,
+              itemBuilder:(context,ind2)
+              {
+                return GestureDetector(
+                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)
+                  {
+                    return Indi(p1:_finalproducts[ind2]);
+                  })),
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+              decoration: BoxDecoration(
+                  borderRadius:BorderRadius.circular(20)
+              ),
+              height: 800,
+              width: 100,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical:5.0),
+                  child: Column(
+                  children: [
+                    Expanded(flex:10,child:Image.memory(base64Decode(_finalproducts[ind2].image))),
+                    Expanded(flex:1,child: Text(_finalproducts[ind2].brand)),
+                    Expanded(flex:1,child: Text(_finalproducts[ind2].title)),
+                    Expanded(flex:1,child: Text("₹"+_finalproducts[ind2].price.toString())),
+                  ],
+                ),
+              )
+              ),
+                  ),
+                );
+              }
+              ),
+            ),
           ],
-    ),
+        ),
       )
-      ),
-          ),
-        );
-      }
-      );
+    );
   }
 }

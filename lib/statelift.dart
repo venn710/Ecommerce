@@ -16,7 +16,7 @@ class LiftState with ChangeNotifier
   List<Product>dresses=[];
   List<Product>_footwear=[];
   List<Product>jewellary=[];
-  List<Product>handbaga=[];
+  List<Product>handbags=[];
 LiftState(int index)
 {
   if(index==0)
@@ -106,7 +106,7 @@ void womenprods()async
          unique_id:w['_id']
        ));
         else if(w['title']=='Handbags')
-        handbaga.add(Product(
+        handbags.add(Product(
          title: w['title'],
          desc: w['description'],
          id: w['id'],
@@ -142,7 +142,7 @@ void womenprods()async
       wp.update(womencatos[0], (value) =>dresses);
       wp.update(womencatos[1], (value) =>_footwear);
       wp.update(womencatos[2], (value) =>jewellary);
-      wp.update(womencatos[3], (value) =>handbaga);
+      wp.update(womencatos[3], (value) =>handbags);
       notifyListeners();
 
 }

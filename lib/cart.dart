@@ -26,14 +26,17 @@ class _CartState extends State<Cart> {
     getcart();
 
   }
+  void dispose()
+  {
+    super.dispose();
+  }
   void getcart()async
   {
 
     var response=await get(Uri.parse('https://fresh48.herokuapp.com/cart/${widget.user}'));
     print("https://fresh48.herokuapp.com/cart/${widget.user}");
     List result=jsonDecode(response.body);
-    print("#####################");
-    if(result.length==0)
+    if(result.length==0 && mounted)
     {
       setState(() {
       _load=false;
@@ -63,6 +66,7 @@ class _CartState extends State<Cart> {
       );
     }
     print(result[0]['usermail']);
+    if(mounted)
     setState(() {
           _load=false;
         });
@@ -133,7 +137,7 @@ class _CartState extends State<Cart> {
                                 Row(
                                   children: [
                                                 FloatingActionButton(
-                                                heroTag: 'btn1',
+                                                heroTag: Text('btn1'),
                                                 mini: true,
                                                 onPressed: ()async
                                                 {
@@ -149,6 +153,7 @@ class _CartState extends State<Cart> {
                                                   await put(Uri.parse('https://fresh48.herokuapp.com/cart'),body:_resu,headers: {
                                                     "Content-Type": "application/json"
                                                   });
+                                                  if(mounted)
                                                   setState(() {
                                                     e.quant=e.quant-1;     
                                                       subtot=subtot-e.price;                                   
@@ -162,7 +167,7 @@ class _CartState extends State<Cart> {
                                       Text(e.quant.toString(),style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
                                       SizedBox(width:2,),
                                       FloatingActionButton(
-                                                heroTag: 'btn2',
+                                                heroTag: Text('btn2'),
                                                 mini: true,
                                                 onPressed: ()async
                                                 {
@@ -175,7 +180,8 @@ class _CartState extends State<Cart> {
                                                   print(_resu);
                                                   await put(Uri.parse('https://fresh48.herokuapp.com/cart'),body:_resu,headers: {
                                                     "Content-Type": "application/json"
-                                                  });                                              
+                                                  });    
+                                                  if(mounted)                                          
                                                   setState(() {
                                                     e.quant=e.quant+1;        
                                                     subtot=subtot+e.price;                                 
@@ -193,8 +199,8 @@ class _CartState extends State<Cart> {
                                                   await delete(Uri.parse('https://fresh48.herokuapp.com/cart'),body: _res3,headers: {
                                                     "Content-Type": "application/json"
                                                   });
+                                                  if(mounted)
                                                   setState(() {
-                                                    print("index is index");
                                                    _cartresults.removeWhere((element) => element.unique_id==e.unique_id);
                                                     subtot=subtot-(e.price)*(e.quant);
                                                   });
