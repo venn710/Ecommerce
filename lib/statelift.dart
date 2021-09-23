@@ -32,6 +32,7 @@ void menprods()async
      print("fetched");
      List finres=await jsonDecode(res.body);
      print(finres.length);
+     finres=finres[0]['products'];
      for (var w in finres)
      {
        if(w['title']=='Shirt')
@@ -92,6 +93,7 @@ void womenprods()async
      print("fetched");
      List finres=await jsonDecode(res.body);
      print(finres.length);
+     finres=finres[0]['products'];
      for (var w in finres)
      {
        if(w['title']=='Dresses')

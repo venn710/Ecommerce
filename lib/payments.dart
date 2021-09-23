@@ -9,8 +9,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferences _Prefs;
 class Paymants extends StatefulWidget {
-  Product data;
-  Paymants({this.data});
+  int number_of_products;
+  int total_amount;
+  List<Product>finprods=[];
+  Paymants({this.number_of_products,this.total_amount,this.finprods});
   @override
   _PaymantsState createState() => _PaymantsState();
 }
@@ -48,11 +50,13 @@ class _PaymantsState extends State<Paymants> {
       print(res.paymentId);
       print(res.signature);
       _Prefs= await SharedPreferences.getInstance();
+      for(var w in widget.finprods)
+      {
       var _obj={
       "usermail":_Prefs.getString('email'),
       "products":[
       {
-      "brand":widget.data.brand,"id":widget.data.id,"description":widget.data.desc,"image":widget.data.image,"size":widget.data.size,"title":widget.data.title,"price":widget.data.price,"quantity":widget.data.quant
+      "brand":w.brand,"id":w.id,"description":w.desc,"image":w.image,"size":w.size,"title":w.title,"price":w.price,"quantity":w.quant
       }
       ]
       };
@@ -61,6 +65,7 @@ class _PaymantsState extends State<Paymants> {
       await post(Uri.parse('https://fresh48.herokuapp.com/orders',),body:_res,headers: {
       "Content-Type": "application/json"
       });
+      }
       print("ORDER PllllllACED");
   
 
@@ -81,19 +86,18 @@ class _PaymantsState extends State<Paymants> {
     var response=await http.post(Uri.parse(url),   
     headers: {"content-type":"application/json","authorization":basicAuth},
     body:jsonEncode({
-    "amount": (widget.data.price*widget.data.quant)*100,
+    "amount": (widget.total_amount)*100,
     "currency": "INR",
     "receipt": "rcptid_2021"
   }),
     );
 var res1=await jsonDecode(response.body)['id'];
 var res2=(res1.toString());
-var img=(base64Decode(widget.data.image)).toString();
     var options=
     {
       'key':'rzp_test_2o37GOSgU8fnii',
-      'name':widget.data.title,
-      'description':widget.data.desc,
+      'name':"Products",
+      'description':"Number of products : ${widget.number_of_products}",
       'order_id':res2,
       'theme':
       {
