@@ -100,7 +100,7 @@ class _CateState extends State<Cate> {
       ),
       Expanded(
         flex: 10,
-        child: Prods())
+        child: (flag2)?Center(child: Text("No products added")):Prods())
     ],
         );
   }

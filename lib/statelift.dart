@@ -7,6 +7,8 @@ import 'models/product.dart';
 import 'util.dart';
 List<String>mencatos=["Jeans","Shirt","Footwear","Hoodies"];
 List<String>womencatos=["Dresses","Footwear","Jewellary","Handbags"];
+bool flag1=false;
+bool flag2=false;
 class LiftState with ChangeNotifier
 {
   List<Product>jeans=[];
@@ -32,7 +34,9 @@ void menprods()async
      print("fetched");
      List finres=await jsonDecode(res.body);
      print(finres.length);
-     finres=finres[0]['products'];
+     try
+     {
+            finres=finres[0]['products'];
      for (var w in finres)
      {
        if(w['title']=='Shirt')
@@ -84,6 +88,10 @@ void menprods()async
       mp.update(mencatos[1], (value) =>shirts);
       mp.update(mencatos[2], (value) =>footwear);
       mp.update(mencatos[3], (value) =>hoodies);
+     }
+     on RangeError catch (e){
+        flag1=true;
+     }
       notifyListeners();
 }
 void womenprods()async
@@ -93,9 +101,11 @@ void womenprods()async
      print("fetched");
      List finres=await jsonDecode(res.body);
      print(finres.length);
-     finres=finres[0]['products'];
+     try
+     {
      for (var w in finres)
      {
+            finres=finres[0]['products'];
        if(w['title']=='Dresses')
          dresses.add(Product(
          title: w['title'],
@@ -145,6 +155,10 @@ void womenprods()async
       wp.update(womencatos[1], (value) =>_footwear);
       wp.update(womencatos[2], (value) =>jewellary);
       wp.update(womencatos[3], (value) =>handbags);
+     }
+     on RangeError catch (e){
+     flag2=true;
+     }
       notifyListeners();
 
 }

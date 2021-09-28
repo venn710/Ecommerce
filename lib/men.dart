@@ -19,8 +19,7 @@ class _MenState extends State<Men>{
   }
   @override
   Widget build(BuildContext context) {
-    // print(sha)
-    return ChangeNotifierProvider(
+        return ChangeNotifierProvider(
           create:(context)=>LiftState(0),
           child: SafeArea(
             child: Scaffold(
@@ -104,7 +103,7 @@ class _Cate1State extends State<Cate1> {
       ),
       Expanded(
         flex: 10,
-        child: MensProducts())
+        child: (flag1)?Center(child: Text("No products added")):MensProducts())
     ],
         );
   }

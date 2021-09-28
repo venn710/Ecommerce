@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _form = GlobalKey<FormState>();
   String pass;
+  bool _loader = false;
   @override
   void initState() {
     super.initState();
@@ -78,51 +79,72 @@ class _LoginState extends State<Login> {
                     ),
                   ],
                 )),
-            ElevatedButton(
-                onPressed: () async {
-                  if (_form.currentState.validate()) {
-                    print(pass);
-                    print(mail);
-                    final passss = pass;
-                    var utfdata = utf8.encode(passss);
-                    final d = new encrypter.SHA256Digest();
-                    var restt = d.process(utfdata);
-                    print("Login clicked");
-                    try{
-                    await _auth.signInWithEmailAndPassword(email: mail, password: pass);
-                        final prefs = await SharedPreferences.getInstance();
-                     var _res1 = await get(
-                        Uri.parse("https://fresh48.herokuapp.com/users"));
-                    var bod = jsonDecode(_res1.body);
-                    for (var w in bod) {
-                      if (w['email'] == mail && w['pass'] == restt.toString()) {
-                        prefs.setString('email', mail);
-                        prefs.setBool('isadmin', w['isadmin']);
-                        Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return HomePage();
-                        }));
+            (_loader)
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: () async {
+                      if (_form.currentState.validate()) {
+                        print(pass);
+                        print(mail);
+                        final passss = pass;
+                        var utfdata = utf8.encode(passss);
+                        final d = new encrypter.SHA256Digest();
+                        var restt = d.process(utfdata);
+                        print("Login clicked");
+                        setState(() {
+                          _loader = true;
+                        });
+                        try {
+                          await _auth.signInWithEmailAndPassword(
+                              email: mail, password: pass);
+                          final prefs = await SharedPreferences.getInstance();
+                          var _res1 = await get(
+                              Uri.parse("https://fresh48.herokuapp.com/users"));
+                          var bod = jsonDecode(_res1.body);
+                          for (var w in bod) {
+                            if (w['email'] == mail &&
+                                w['pass'] == restt.toString()) {
+                              prefs.setString('email', mail);
+                              prefs.setBool('isadmin', w['isadmin']);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return HomePage();
+                              }));
+                            }
+                          }
+                          setState(() {
+                            _loader = false;
+                          });
+                        } on FirebaseAuthException catch (e) {
+                          setState(() {
+                            _loader = false;
+                          });
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  title: Text("Uh-oh!"),
+                                  // titlePadding: EdgeInsets.all(15),
+                                  elevation: 10,
+                                  backgroundColor: Colors.red[200],
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text("try_again",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.white)))
+                                  ],
+                                  content: Text(e.message),
+                                );
+                              });
+                        }
                       }
-                      }
-                    } 
-                    on FirebaseAuthException catch(e){
-                      showDialog(context: context, builder: (context){
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          title: Text("Uh-oh!"),
-                          // titlePadding: EdgeInsets.all(15),
-                          elevation: 10,
-                          backgroundColor: Colors.red[200],  
-                          actions: [
-                            TextButton(onPressed: ()=>Navigator.of(context).pop(), child:Text("try_again",style: TextStyle(fontSize:18,color: Colors.white)))
-                          ],
-                          content: Text(e.message),
-                        );
-                      });
-                    }
-                  }
-                },
-                child: Text("Log In"))
+                    },
+                    child: Text("Log In"))
           ],
         ),
       ),

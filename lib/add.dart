@@ -41,15 +41,15 @@ class _AddState extends State<Add> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery,imageQuality:50,maxHeight:500);
     image1 = File(pickedFile.path);
     imageBytes = image1.readAsBytesSync();
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    print(imageBytes.length);
-    print(imageBytes);
+    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    // print(imageBytes.length);
+    // print(imageBytes);
     // 1096509
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     baseimage = base64Encode(imageBytes);
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    print(baseimage.length);
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    // print(baseimage.length);
+    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     
     setState(() {
       image1 = File(pickedFile.path);
@@ -239,8 +239,8 @@ class _AddState extends State<Add> {
                     ),
                   ),
                 ),
-                (flag)
-                    ? ElevatedButton(onPressed: null, child: Text("ADD"))
+                (flag && _form1.currentState.validate() && image1 != null)
+                    ? Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         onPressed: () async {
                           setState(() {
@@ -320,7 +320,6 @@ class _AddState extends State<Add> {
                         },
                         child: Text("ADD"),
                       ),
-                (flag) ? CircularProgressIndicator() : Container()
               ],
             ),
           ),

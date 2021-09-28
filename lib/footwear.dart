@@ -73,11 +73,13 @@ class _FootwearState extends State<Footwear> {
        )
       );
       }
-      wp.update("Footwear", (value) =>_temp1);
+      setState(() {
+              wp.update("Footwear", (value) =>_temp1);
       print(wp['Footwear']);
       print(mp['Footwear']);
+      });
     }
-    if(wp["Footwear"].length!=0 && mp["Footwear"].length!=0)
+    else
 { 
   print("came here");
   if(mounted )  
@@ -85,9 +87,12 @@ class _FootwearState extends State<Footwear> {
       _loader=false;
      _finalproducts.addAll(wp['Footwear']);
      _finalproducts.addAll(mp['Footwear']);
-          print(_finalproducts.length);
+      print(_finalproducts.length);
     });
   }
+  setState(() {
+    _loader=false;
+  });
   }
   @override
   Widget build(BuildContext context) {
@@ -99,6 +104,7 @@ class _FootwearState extends State<Footwear> {
               padding: const EdgeInsets.all(8.0),
               child: Text("FOOTWEAR",style: TextStyle(color: Color.fromRGBO(220, 60, 20, 1), fontSize:30,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
             )),
+            (_finalproducts.length==0)?Expanded(flex:10,child: Center(child: (Text("No Products are added")))):
             Expanded(
               flex:10,
               child: GridView.builder(
