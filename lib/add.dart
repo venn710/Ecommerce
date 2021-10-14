@@ -41,16 +41,7 @@ class _AddState extends State<Add> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery,imageQuality:50,maxHeight:500);
     image1 = File(pickedFile.path);
     imageBytes = image1.readAsBytesSync();
-    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    // print(imageBytes.length);
-    // print(imageBytes);
-    // 1096509
-    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     baseimage = base64Encode(imageBytes);
-    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    // print(baseimage.length);
-    // print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    
     setState(() {
       image1 = File(pickedFile.path);
     });
