@@ -1,7 +1,7 @@
 import './models/product.dart';
 Map<String,List<Product>>mp={
   "Jeans":null,
-  "Shirt":null,
+  "Shirts":null,
   "Footwear":null,
   "Hoodies":null
 };

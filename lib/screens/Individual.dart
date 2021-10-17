@@ -54,17 +54,12 @@ class BottomCard extends StatefulWidget {
   _BottomCardState createState() => _BottomCardState();
 }
 
-class _BottomCardState extends State<BottomCard>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+class _BottomCardState extends State<BottomCard>{
   int quant = 1;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _controller.forward();
   }
 
   @override
@@ -231,7 +226,8 @@ class _BottsheetState extends State<Bottsheet> {
                             "image": widget.p3.image,
                             "size": widget.p3.size,
                             "title": widget.p3.title,
-                            "price": widget.p3.price
+                            "price": widget.p3.price,
+                            "unique_id":widget.p3.unique_id
                           }
                         };
                         var _res = jsonEncode(_obj);

@@ -324,8 +324,8 @@ class _CartState extends State<Cart> {
                                   _num = _num + w.quant;
                                 return Paymants(
                                   finprods: _cartresults,
-                                  number_of_products:_num,
-                                  total_amount:subtot,
+                                  number_of_products: _num,
+                                  total_amount: subtot,
                                 );
                               }));
                             },

@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                           onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Footwear())),
+                                  builder: (context) => FinFootwear())),
                           child: Carouselcard(
                             imgpath: 'assets/images/footwear.png',
                             title: 'FOOTWEAR',
@@ -260,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                                   onTap: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Footwear())),
+                                          builder: (context) => FinFootwear())),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Container(
