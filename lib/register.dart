@@ -24,6 +24,7 @@ class _RegisterState extends State<Register> {
   String pass;
   String mail;
   List<String> options = ['Customer', 'Admin'];
+  bool _loader = false;
   final _auth = FirebaseAuth.instance;
   @override
   void initState() {
@@ -122,61 +123,84 @@ class _RegisterState extends State<Register> {
               },
             ),
           ),
-          ElevatedButton(
-              child: Text("register"),
-              onPressed: () async {
-                print(mail);
-                print(pass);
-                if (_form.currentState.validate()) {
-                  try{
-                    var user = await _auth.createUserWithEmailAndPassword(
-                    email: mail,
-                    password: pass);
-                    if (user != null) {
-                    final passss = pass;
-                    var utfdata = utf8.encode(passss);
-                    final d = new SHA256Digest();
-                    var _restt = d.process(utfdata);
-                    var _obj = {
-                      'email': mail,
-                      'pass': _restt.toString(),
-                      'isadmin': (_val == null || _val=='Customer') ? false : true,
-                      'address': {}
-                    };
-                    var _res = jsonEncode(_obj);
-                    var resuu = await post(
-                        Uri.parse(
-                          "https://fresh48.herokuapp.com/user",
-                        ),
-                        body: _res,
-                        headers: {"Content-Type": "application/json"});
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.setString('email', mail);
-                    prefs.setBool('isadmin',(_val == null || _val == 'Customer') ? false : true);
-                  }
-                    if (mail != null && pass != null)
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return HomePage();
-                    }));
-                  }
-                  on FirebaseAuthException catch (e)
-                  {
-                    showDialog(context: context, builder: (context){
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          title: Text("Uh-oh!"),
-                          elevation: 10,
-                          backgroundColor: Colors.red[200],  
-                          actions: [
-                            TextButton(onPressed: ()=>Navigator.of(context).pop(), child:Text("try_again",style: TextStyle(fontSize:18,color: Colors.white)))
-                          ],
-                          content: Text(e.message),
-                        );
+          (_loader)
+              ? CircularProgressIndicator()
+              : ElevatedButton(
+                  child: Text("register"),
+                  onPressed: () async {
+                    print(mail);
+                    print(pass);
+                    if (_form.currentState.validate()) {
+                      setState(() {
+                        _loader = true;
                       });
-                  }
-                }
-              })
+                      try {
+                        var user = await _auth.createUserWithEmailAndPassword(
+                            email: mail, password: pass);
+                        if (user != null) {
+                          final passss = pass;
+                          var utfdata = utf8.encode(passss);
+                          final d = new SHA256Digest();
+                          var _restt = d.process(utfdata);
+                          var _obj = {
+                            'email': mail,
+                            'pass': _restt.toString(),
+                            'isadmin': (_val == null || _val == 'Customer')
+                                ? false
+                                : true,
+                            'address': {}
+                          };
+                          var _res = jsonEncode(_obj);
+                          var resuu = await post(
+                              Uri.parse(
+                                "https://fresh48.herokuapp.com/user",
+                              ),
+                              body: _res,
+                              headers: {"Content-Type": "application/json"});
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setString('email', mail);
+                          prefs.setBool(
+                              'isadmin',
+                              (_val == null || _val == 'Customer')
+                                  ? false
+                                  : true);
+                        }
+                        if (mail != null && pass != null)
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return HomePage();
+                          }));
+                        setState(() {
+                          _loader = false;
+                        });
+                      } on FirebaseAuthException catch (e) {
+                        setState(() {
+                          _loader = false;
+                        });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                title: Text("Uh-oh!"),
+                                elevation: 10,
+                                backgroundColor: Colors.red[200],
+                                actions: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text("try_again",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white)))
+                                ],
+                                content: Text(e.message),
+                              );
+                            });
+                      }
+                    }
+                  })
         ]),
       ),
     );
