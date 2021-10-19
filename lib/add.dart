@@ -38,7 +38,8 @@ class _AddState extends State<Add> {
   final picker = ImagePicker();
   final _form1 = GlobalKey<FormState>();
   Future getimage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery,imageQuality:50,maxHeight:500);
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 50, maxHeight: 500);
     image1 = File(pickedFile.path);
     imageBytes = image1.readAsBytesSync();
     baseimage = base64Encode(imageBytes);
@@ -268,7 +269,7 @@ class _AddState extends State<Add> {
                               var _obj = {
                                 "id": id,
                                 "products": {
-                                  "id":id,
+                                  "id": id,
                                   "brand": brand,
                                   "description": desc,
                                   "image": baseimage,
@@ -306,6 +307,12 @@ class _AddState extends State<Add> {
                                   flag = false;
                                 });
                               }
+                             var _obj1 = {
+                                "event": "Events",
+                                "title": "New Arrivals",
+                                "body": "New Products were added do checkout"
+                              };
+                              await post(Uri.parse('https://fresh48.herokuapp.com/notification/general'));
                             }
                           }
                         },
