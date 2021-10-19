@@ -307,12 +307,21 @@ class _AddState extends State<Add> {
                                   flag = false;
                                 });
                               }
-                             var _obj1 = {
+                              Navigator.of(context).pop();
+                              var _obj1 = {
                                 "event": "Events",
                                 "title": "New Arrivals",
                                 "body": "New Products were added do checkout"
                               };
-                              await post(Uri.parse('https://fresh48.herokuapp.com/notification/general'));
+                              var _respp1 = jsonEncode(_obj1);
+                              await post(
+                                  Uri.parse(
+                                      'https://fresh48.herokuapp.com/notification/general'),
+                                  body: _respp1,
+                                  headers: {
+                                    "Content-Type": "application/json"
+                                  });
+                              print("sent notification");
                             }
                           }
                         },

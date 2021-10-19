@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fresh/cart.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/payments.dart';
 import 'package:http/http.dart';
@@ -131,6 +132,11 @@ class Bottsheet extends StatefulWidget {
 
 class _BottsheetState extends State<Bottsheet> {
   int quant = 1;
+  bool _loader=false;
+        void showInSnackbar(BuildContext ctx)
+  {
+    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text('Uh-oh!Seems like you have not added address yet')));
+  }
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -214,6 +220,9 @@ class _BottsheetState extends State<Bottsheet> {
                     flex: 5,
                     child: GestureDetector(
                       onTap: () async {
+                        setState(() {
+                          _loader=true;
+                        });
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         var _obj = {
@@ -238,6 +247,29 @@ class _BottsheetState extends State<Bottsheet> {
                             ),
                             body: _res,
                             headers: {"Content-Type": "application/json"});
+                            setState(() {
+                              _loader=false;
+                            });
+                            showDialog(context: context, builder:(ctx)
+                            {
+                              return AlertDialog(
+                                content: Text("Product Added to Cart"),
+                                actions:[
+                                  TextButton(onPressed: ()async{
+                            SharedPreferences prefs =await SharedPreferences.getInstance();
+                            Navigator.push(context,MaterialPageRoute(builder: (context)
+                            {
+                              return Cart(user: prefs.getString('email'),); 
+                            }));    
+                                  }, child: Text("Go to Cart")),
+                                  TextButton(onPressed: (){
+                                    Navigator.of(context).pop();
+                                  }, child: Text("Continue Shopping")),
+
+                                ]
+                              );
+                            });
+                            // showInSnackbar(context);
                         print("cart posted");
                       },
                       child: Material(
@@ -301,6 +333,7 @@ class _BottsheetState extends State<Bottsheet> {
                     ))
               ],
             ),
+            _loader?Center(child: CircularProgressIndicator()):Container()
           ],
         ),
       ),

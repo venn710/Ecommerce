@@ -51,7 +51,7 @@ class _FinFootwearState extends State<FinFootwear> {
       }
       setState(() {
               mp.update("Footwear", (value) => _temp);
-              _finalproducts.addAll(mp['Footwear']);
+              // _finalproducts.addAll(mp['Footwear']);
       });
     }
     if(wp['Footwear'] == null) {
@@ -72,10 +72,10 @@ class _FinFootwearState extends State<FinFootwear> {
         }
         setState(() {
           wp.update("Footwear", (value) => _temp1);
-          _finalproducts.addAll(wp['Footwear']);
+          // _finalproducts.addAll(wp['Footwear']);
         });
     } 
-    else if(mp['Footwear']!=null){
+    if(mp['Footwear']!=null){
       print("came here");
       if (mounted)
         setState(() {
@@ -85,7 +85,7 @@ class _FinFootwearState extends State<FinFootwear> {
           print("length is_${_finalproducts.length}");
         });
     }
-        else if(wp['Footwear']!=null){
+      if(wp['Footwear']!=null){
       print("came here");
       if (mounted)
         setState(() {

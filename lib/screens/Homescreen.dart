@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     print(isadmin);
-    return Scaffold(
+    return (_loader)?Scaffold(body: Center(child: CircularProgressIndicator())):Scaffold(
       appBar: AppBar(
         title: Text("EComm"),
         centerTitle: true,
@@ -96,6 +96,10 @@ class _HomePageState extends State<HomePage> {
                       )),
                   GestureDetector(
                       onTap: () async {
+                        Navigator.pop(context);
+                        setState(() {
+                          _loader=true;
+                        });
                         var res = await get(Uri.parse(
                             'https://fresh48.herokuapp.com/address/$usermail'));
                         finres = jsonDecode(res.body);
@@ -106,6 +110,9 @@ class _HomePageState extends State<HomePage> {
                             uname: usermail,
                           );
                         }));
+                        setState(() {
+                          _loader=false;
+                        });
                       },
                       child: Drawercard(
                         imgpath: 'assets/images/home-address.png',
@@ -156,9 +163,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: Colors.cyan[100],
-      body: (_loader)
-          ? CircularProgressIndicator()
-          : SafeArea(
+      body:SafeArea(
               child: ListView(
                 children: [
                   SizedBox(
