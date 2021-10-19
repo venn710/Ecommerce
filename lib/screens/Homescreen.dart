@@ -13,8 +13,6 @@ import 'package:fresh/orders.dart';
 import 'package:fresh/welcome.dart';
 import 'package:fresh/women.dart';
 import 'package:http/http.dart';
-import 'package:mongo_dart/mongo_dart.dart' show Db;
-import 'package:pointycastle/digests/sha256.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../men.dart';
@@ -48,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     print(isadmin);
     return (_loader)?Scaffold(body: Center(child: CircularProgressIndicator())):Scaffold(
       appBar: AppBar(
-        title: Text("EComm"),
+        title: Text("VERCE"),
         centerTitle: true,
         backgroundColor: Colors.black45,
         elevation: 30,

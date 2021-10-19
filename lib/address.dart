@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+  bool _loader1=false;
 class AddressDetails extends StatefulWidget {
   String uname;
   Function fun;
@@ -13,6 +14,7 @@ class AddressDetails extends StatefulWidget {
 
 class _AddressDetailsState extends State<AddressDetails> {
   SharedPreferences _Prefs;
+
   List _resp1;
   bool fl;
   bool _loader=true;
@@ -23,6 +25,7 @@ class _AddressDetailsState extends State<AddressDetails> {
   }
   void dispose(){
     super.dispose();
+    _loader1=false;
   }
     void showInSnackbar(BuildContext ctx)
   {
@@ -51,14 +54,14 @@ class _AddressDetailsState extends State<AddressDetails> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return (_loader1)?Scaffold(body:Center(child: CircularProgressIndicator()),):Scaffold(
       appBar: AppBar(
         title: Text("My Addresses"),
         centerTitle: true,
         backgroundColor: Colors.white70,
         foregroundColor: Colors.black,
       ),
-      body:(_loader)?Center(child: CircularProgressIndicator()):(fl)?addressform(widget.fun,widget.uname): 
+      body:(_loader)?Center(child: CircularProgressIndicator()):(fl)?AddressForm(payment: widget.fun,uname: widget.uname): 
       SafeArea(
         child:
             Column(
@@ -94,7 +97,13 @@ class _AddressDetailsState extends State<AddressDetails> {
                       }
                       ),
                 ),
-                (widget.fun==null)?Container():Expanded(child: ElevatedButton(onPressed: widget.fun, child:Text("PAYYYY")))
+                (widget.fun==null)?Container():Expanded(child: ElevatedButton(onPressed:()async
+                {
+                  setState(() {
+                    _loader1=true;
+                  });
+                  widget.fun();
+                }, child:Text("PAYYYY")))
               ],
             ),
           ),
@@ -119,11 +128,22 @@ class Rowcard extends StatelessWidget {
     );
   }
 }
-Widget addressform(Function _payment,String uname)
-{
-    final _formKey = GlobalKey<FormState>();
+class AddressForm extends StatefulWidget {
+  Function payment;
+  String uname;
+  AddressForm({this.payment,this.uname});
+  @override
+  _AddressFormState createState() => _AddressFormState();
+}
+
+class _AddressFormState extends State<AddressForm> {
+      final _formKey = GlobalKey<FormState>();
+        bool _loader2=false;
       String hno,state,district,mobileno,name,village;
-return SafeArea(
+  @override
+  Widget build(BuildContext context) {
+    return (_loader2)?Scaffold(body: Center(child: CircularProgressIndicator()),):
+    SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: ListView(
@@ -234,12 +254,17 @@ return SafeArea(
                   ],
                 )),
                 Container(
-                child: ElevatedButton(child: Text("Save and PAY"),onPressed:()async
-                {
+                child: ElevatedButton(
+                  child: Text("Save and PAY"),
+                  onPressed:()async
+                  {
+                setState(() {
+                    _loader2=true;
+                  });
                   if(_formKey.currentState.validate())
                   {
                        var _obj={
-                      "usermail":uname,
+                      "usermail":widget.uname,
                       "address":
                       {
                         "HNO":hno,
@@ -257,14 +282,17 @@ return SafeArea(
                         });
                         // print(jsonDecode(resss.body));
                         print("ADDRESS posted");
-                    _payment();
+                    widget.payment();
                   }
-                },),
+                },
+                ),
               ),]
             ),
           ),
         );
+  }
 }
+
   InputDecoration DECORATION(String text) {
     return InputDecoration(
           hintText: text,

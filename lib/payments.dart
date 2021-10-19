@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fresh/address.dart';
 import 'package:fresh/models/product.dart';
+import 'package:fresh/screens/Homescreen.dart';
 import 'package:http/http.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -67,8 +68,10 @@ class _PaymantsState extends State<Paymants> {
       });
       }
       print("ORDER PllllllACED");
-  
-
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)
+      {
+        return HomePage();
+      }));
   }
   void paymentfailurehandler(PaymentFailureResponse res1)
   {
