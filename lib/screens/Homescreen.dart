@@ -5,13 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fresh/Hivedata/Hiveorders.dart';
 import 'package:fresh/add.dart';
 import 'package:fresh/address.dart';
-import 'package:fresh/cart.dart';
+import 'package:fresh/cartfin.dart';
 import 'package:fresh/footwear.dart';
+import 'package:fresh/Hivedata/Hivecart.dart';
 import 'package:fresh/orders.dart';
 import 'package:fresh/welcome.dart';
 import 'package:fresh/women.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +34,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getauth();
   }
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    // Hive.close();
+  }
   void getauth() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -49,8 +57,6 @@ class _HomePageState extends State<HomePage> {
         title: Text("VERCE"),
         centerTitle: true,
         backgroundColor: Colors.black45,
-        elevation: 30,
-        toolbarHeight: 60,
         actions: [
           GestureDetector(
               onTap: () {
@@ -58,7 +64,8 @@ class _HomePageState extends State<HomePage> {
                     ? null
                     : Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                        return Cart(user: usermail);
+                        return  TESTINGCART();
+                        // Cart(user: usermail);
                       }));
               },
               child: Image.asset('assets/images/cart3.png'))
@@ -95,22 +102,27 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                       onTap: () async {
                         Navigator.pop(context);
-                        setState(() {
-                          _loader=true;
-                        });
+                        // setState(() {
+                        //   _loader=true;
+                        // });
                         var res = await get(Uri.parse(
                             'https://fresh48.herokuapp.com/address/$usermail'));
                         finres = jsonDecode(res.body);
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return AddressDetails(
+                          return 
+                          // TestingDart(
+                          //   fun:null,
+                          //   uname:usermail
+                          // );
+                          AddressDetails(
                             fun: null,
                             uname: usermail,
                           );
                         }));
-                        setState(() {
-                          _loader=false;
-                        });
+                        // setState(() {
+                        //   _loader=false;
+                        // });
                       },
                       child: Drawercard(
                         imgpath: 'assets/images/home-address.png',
@@ -120,7 +132,9 @@ class _HomePageState extends State<HomePage> {
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Orders(user: usermail),
+                            builder: (context) =>
+                            Hiveorders() 
+                            // Orders(user: usermail),
                           )),
                       child: Drawercard(
                         imgpath: 'assets/images/order.png',
@@ -130,7 +144,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Cart(user: usermail),
+                          builder: (context) => TESTINGCART()
+                          // Cart(user: usermail),
                         )),
                     child: Drawercard(
                       imgpath: 'assets/images/carts.png',
@@ -141,6 +156,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () async{
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       prefs.clear();
+                      
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(

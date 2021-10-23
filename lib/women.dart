@@ -21,6 +21,7 @@ class _WomenState extends State<Women> {
   void dispose()
   {
     super.dispose();
+    _finindex=0;
   }
   @override
   Widget build(BuildContext context) {

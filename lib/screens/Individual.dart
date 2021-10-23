@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fresh/cart.dart';
+import 'package:fresh/boxes.dart';
+import 'package:fresh/cartfin.dart';
+import 'package:fresh/models/cart.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/payments.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class Indi extends StatefulWidget {
   final Product p1;
@@ -132,6 +135,7 @@ class Bottsheet extends StatefulWidget {
 
 class _BottsheetState extends State<Bottsheet> {
   int quant = 1;
+  String usermail;
   bool _loader=false;
         void showInSnackbar(BuildContext ctx)
   {
@@ -220,11 +224,27 @@ class _BottsheetState extends State<Bottsheet> {
                     flex: 5,
                     child: GestureDetector(
                       onTap: () async {
+                        var uuid = Uuid();
+                      String _obj1=uuid.v1().toString();
+                        SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                        usermail=prefs.getString('email');
+                        final item=CART()
+                        ..title=widget.p3.title
+                        ..brand=widget.p3.brand
+                        ..desc=widget.p3.desc
+                        ..id=widget.p3.id
+                        ..image=widget.p3.image
+                        ..price=widget.p3.price
+                        ..quant=quant
+                        ..usermail=prefs.getString('email')
+                        ..size=widget.p3.size
+                        ..unique_id=_obj1;
+                        final box=BOXES().getcart(); 
+                        box.add(item);
                         setState(() {
                           _loader=true;
                         });
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
                         var _obj = {
                           "usermail": prefs.getString('email'),
                           "products": {
@@ -236,7 +256,7 @@ class _BottsheetState extends State<Bottsheet> {
                             "size": widget.p3.size,
                             "title": widget.p3.title,
                             "price": widget.p3.price,
-                            "unique_id":widget.p3.unique_id
+                            "unique_id":_obj1
                           }
                         };
                         var _res = jsonEncode(_obj);
@@ -295,7 +315,7 @@ class _BottsheetState extends State<Bottsheet> {
                           MaterialPageRoute(
                               builder: (context) => Paymants(
                                     finprods: [
-                                      Product(
+                                      CART(
                                           brand: widget.p3.brand,
                                           desc: widget.p3.desc,
                                           price: widget.p3.price,
@@ -303,7 +323,10 @@ class _BottsheetState extends State<Bottsheet> {
                                           id: widget.p3.id,
                                           image: widget.p3.image,
                                           size: widget.p3.size,
-                                          quant: quant)
+                                          quant: quant,
+                                          unique_id: Uuid().v1(),
+                                          usermail:usermail,
+                                          )
                                     ],
                                     number_of_products: quant,
                                     total_amount: (widget.p3.price) * (quant),

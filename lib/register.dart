@@ -3,15 +3,11 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fresh/address.dart';
-import 'package:fresh/login.dart';
+import 'package:fresh/addressform.dart';
 import 'package:fresh/screens/Homescreen.dart';
-import 'package:fresh/women.dart';
 import 'package:http/http.dart';
 import 'package:pointycastle/digests/sha256.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './util.dart';
-
 // import 'package:mongo_dart/mongo_dart.dart';
 class Register extends StatefulWidget {
   @override

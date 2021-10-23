@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 class Product
 {
   String image,title,desc,id,brand,unique_id;

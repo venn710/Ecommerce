@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fresh/boxes.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/payments.dart';
 import 'package:http/http.dart';
@@ -101,7 +102,6 @@ class _CartState extends State<Cart> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Material(
                                                 elevation: 10,
-                                                // color: Colors.teal,
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                                 child: Row(
@@ -182,12 +182,15 @@ class _CartState extends State<Cart> {
                                                                   });
                                                               if (mounted)
                                                                 setState(() {
-                                                                  e.quant =
-                                                                      e.quant -
-                                                                          1;
-                                                                  subtot =
-                                                                      subtot -
-                                                                          e.price;
+                                                                  if (e.quant >
+                                                                      0) {
+                                                                    e.quant =
+                                                                        e.quant -
+                                                                            1;
+                                                                    subtot =
+                                                                        subtot -
+                                                                            e.price;
+                                                                  }
                                                                 });
                                                             }
                                                           },
@@ -323,7 +326,7 @@ class _CartState extends State<Cart> {
                                 for (var w in _cartresults)
                                   _num = _num + w.quant;
                                 return Paymants(
-                                  finprods: _cartresults,
+                                  finprods:BOXES().getcart().values.toList(),
                                   number_of_products: _num,
                                   total_amount: subtot,
                                 );

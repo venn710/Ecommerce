@@ -41,8 +41,6 @@ class _OrdersState extends State<Orders> {
     var prods=result[0]['products'];
     for(var item in prods)
     {
-      // String brand=item['image'];
-      // print(brand);
       _orderresults.add(
         Product(
           brand: item['brand'].toString(),

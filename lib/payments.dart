@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fresh/address.dart';
+import 'package:fresh/boxes.dart';
+import 'package:fresh/models/cart.dart';
+import 'package:fresh/models/orders.dart';
 import 'package:fresh/models/product.dart';
 import 'package:fresh/screens/Homescreen.dart';
 import 'package:http/http.dart';
@@ -12,7 +15,7 @@ SharedPreferences _Prefs;
 class Paymants extends StatefulWidget {
   int number_of_products;
   int total_amount;
-  List<Product>finprods=[];
+  List<CART>finprods=[];
   Paymants({this.number_of_products,this.total_amount,this.finprods});
   @override
   _PaymantsState createState() => _PaymantsState();
@@ -53,6 +56,19 @@ class _PaymantsState extends State<Paymants> {
       _Prefs= await SharedPreferences.getInstance();
       for(var w in widget.finprods)
       {
+      ORDERS _ord=ORDERS()
+      ..brand=w.brand
+      ..desc=w.desc
+      ..id=w.id
+      ..image=w.image
+      ..price=w.price
+      ..quant=w.quant
+      ..size=w.size
+      ..title=w.title
+      ..unique_id=w.unique_id
+      ..usermail=_Prefs.getString('email');
+      final _orders=BOXES().getorders();
+      _orders.add(_ord);
       var _obj={
       "usermail":_Prefs.getString('email'),
       "products":[
@@ -137,12 +153,12 @@ var res2=(res1.toString());
   }
 
 }
-class Address {
-@required String hno;
-@required String village;
-@required String state;
-@required String district;
-@required int mobilenumber;
-@required String name;
-Address({this.district,this.hno,this.mobilenumber,this.name,this.state,this.village});
-}
+// class Address {
+// @required String hno;
+// @required String village;
+// @required String state;
+// @required String district;
+// @required int mobilenumber;
+// @required String name;
+// Address({this.district,this.hno,this.mobilenumber,this.name,this.state,this.village});
+// }
