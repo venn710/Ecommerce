@@ -139,7 +139,7 @@ class _AddressFormState extends State<AddressForm> {
                     )),
                 Container(
                   child: ElevatedButton(
-                    child: Text("Save and PAY"),
+                    child: (widget.payment==null)?Text("Save"):Text("Save and PAY"),
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         setState(() {
@@ -164,8 +164,13 @@ class _AddressFormState extends State<AddressForm> {
                             ),
                             body: _res,
                             headers: {"Content-Type": "application/json"});
-                        // print(jsonDecode(resss.body));
                         print("ADDRESS posted");
+                        setState(() {
+                          _loader2=false;
+                        });
+                        if(widget.payment==null)
+                        Navigator.of(context).pop();
+                        else
                         widget.payment();
                       }
                     },

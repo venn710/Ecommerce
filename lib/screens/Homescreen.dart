@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fresh/Hivedata/Hiveorders.dart';
 import 'package:fresh/add.dart';
 import 'package:fresh/address.dart';
+import 'package:fresh/boxes.dart';
 import 'package:fresh/cartfin.dart';
 import 'package:fresh/footwear.dart';
 import 'package:fresh/Hivedata/Hivecart.dart';
@@ -34,150 +35,156 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getauth();
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     // Hive.close();
   }
+
   void getauth() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       usermail = prefs.getString('email');
       isadmin = prefs.getBool('isadmin');
-      
     });
   }
 
   @override
   Widget build(BuildContext context) {
     print(isadmin);
-    return (_loader)?Scaffold(body: Center(child: CircularProgressIndicator())):Scaffold(
-      appBar: AppBar(
-        title: Text("VERCE"),
-        centerTitle: true,
-        backgroundColor: Colors.black45,
-        actions: [
-          GestureDetector(
-              onTap: () {
-                (usermail == '')
-                    ? null
-                    : Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return  TESTINGCART();
-                        // Cart(user: usermail);
-                      }));
-              },
-              child: Image.asset('assets/images/cart3.png'))
-        ],
-        shape: Border(bottom: BorderSide(style: (BorderStyle.solid))),
-      ),
-      drawer: Drawer(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(20),
-                      topRight: Radius.circular(20))),
-              width: MediaQuery.of(context).size.width / 1.3,
-              child: Column(
-                children: [
-                  (isadmin)
-                      ? TextButton(
-                          onPressed: () => Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Add())),
-                          child: Center(
-                            child: Text("Wanna ADD your product"),
-                          ))
-                      : Container(),
-                  GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Drawercard(
-                        imgpath: 'assets/images/home.png',
-                        name: "HOME",
-                      )),
-                  GestureDetector(
-                      onTap: () async {
-                        Navigator.pop(context);
-                        // setState(() {
-                        //   _loader=true;
-                        // });
-                        var res = await get(Uri.parse(
-                            'https://fresh48.herokuapp.com/address/$usermail'));
-                        finres = jsonDecode(res.body);
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return 
-                          // TestingDart(
-                          //   fun:null,
-                          //   uname:usermail
-                          // );
-                          AddressDetails(
-                            fun: null,
-                            uname: usermail,
-                          );
-                        }));
-                        // setState(() {
-                        //   _loader=false;
-                        // });
-                      },
-                      child: Drawercard(
-                        imgpath: 'assets/images/home-address.png',
-                        name: "ADDRESS",
-                      )),
-                  GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                            Hiveorders() 
-                            // Orders(user: usermail),
-                          )),
-                      child: Drawercard(
-                        imgpath: 'assets/images/order.png',
-                        name: "ORDERS",
-                      )),
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TESTINGCART()
-                          // Cart(user: usermail),
-                        )),
-                    child: Drawercard(
-                      imgpath: 'assets/images/carts.png',
-                      name: "CART",
+    return (_loader)
+        ? Scaffold(body: Center(child: CircularProgressIndicator()))
+        : Scaffold(
+            appBar: AppBar(
+              title: Text("VERCE"),
+              centerTitle: true,
+              backgroundColor: Colors.black45,
+              actions: [
+                GestureDetector(
+                    onTap: () {
+                      (usermail == '')
+                          ? null
+                          : Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                              return TESTINGCART();
+                              // Cart(user: usermail);
+                            }));
+                    },
+                    child: Image.asset('assets/images/cart3.png'))
+              ],
+              shape: Border(bottom: BorderSide(style: (BorderStyle.solid))),
+            ),
+            drawer: Drawer(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    width: MediaQuery.of(context).size.width / 1.3,
+                    child: Column(
+                      children: [
+                        (isadmin)
+                            ? TextButton(
+                                onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Add())),
+                                child: Center(
+                                  child: Text("Wanna ADD your product"),
+                                ))
+                            : Container(),
+                        GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Drawercard(
+                              imgpath: 'assets/images/home.png',
+                              name: "HOME",
+                            )),
+                        GestureDetector(
+                            onTap: () async {
+                              Navigator.pop(context);
+                              // setState(() {
+                              //   _loader=true;
+                              // });
+                              var res = await get(Uri.parse(
+                                  'https://fresh48.herokuapp.com/address/$usermail'));
+                              finres = jsonDecode(res.body);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return
+                                    // TestingDart(
+                                    //   fun:null,
+                                    //   uname:usermail
+                                    // );
+                                    AddressDetails(
+                                  fun: null,
+                                  uname: usermail,
+                                );
+                              }));
+                              // setState(() {
+                              //   _loader=false;
+                              // });
+                            },
+                            child: Drawercard(
+                              imgpath: 'assets/images/home-address.png',
+                              name: "ADDRESS",
+                            )),
+                        GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Hiveorders()
+                                    // Orders(user: usermail),
+                                    )),
+                            child: Drawercard(
+                              imgpath: 'assets/images/order.png',
+                              name: "ORDERS",
+                            )),
+                        GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TESTINGCART()
+                                  // Cart(user: usermail),
+                                  )),
+                          child: Drawercard(
+                            imgpath: 'assets/images/carts.png',
+                            name: "CART",
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.clear();
+                            BOXES().getcart().deleteAll(BOXES().getcart().keys);
+                            BOXES().getorders().deleteAll(BOXES().getorders().keys);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => welcome(),
+                              ),
+                              (route) => false,
+                            );
+                          },
+                          child: Drawercard(
+                            imgpath: "assets/images/logout.png",
+                            name: "LOGOUT",
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () async{
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      prefs.clear();
-                      
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => welcome(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    child: Drawercard(
-                      imgpath: "assets/images/logout.png",
-                      name: "LOGOUT",
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-      backgroundColor: Colors.cyan[100],
-      body:SafeArea(
+            backgroundColor: Colors.cyan[100],
+            body: SafeArea(
               child: ListView(
                 children: [
                   SizedBox(
@@ -302,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-    );
+          );
   }
 }
 

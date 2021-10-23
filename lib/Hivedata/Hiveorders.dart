@@ -33,8 +33,8 @@ class _HiveordersState extends State<Hiveorders> {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     uname = _prefs.getString('email');
     var response =
-await get(Uri.parse('https://fresh48.herokuapp.com/orders/$uname'));
-print('https://fresh48.herokuapp.com/orders/$uname');
+        await get(Uri.parse('https://fresh48.herokuapp.com/orders/$uname'));
+    print('https://fresh48.herokuapp.com/orders/$uname');
     List result = jsonDecode(response.body);
     if (result.length == 0 && mounted) {
       setState(() {
@@ -67,56 +67,65 @@ print('https://fresh48.herokuapp.com/orders/$uname');
 
   @override
   Widget build(BuildContext context) {
-    return (_load)?Scaffold(body: Center(child: (CircularProgressIndicator()))):(BOXES().getorders().length == 0)
-        ? Scaffold(body: Center(child: Text("No products are there")))
-        : Scaffold(
-          appBar: AppBar(
-            title: Text("ORDERS"),
-            centerTitle: true,
-          ),
-            body: ListView(
-              children: BOXES().getorders().values.map((e) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Material(
-                    borderRadius: BorderRadius.circular(20),
-                    elevation: 10,
-                    child: Row(
-                      children: [
-                        Expanded(
-                            flex: 1,
-                            child: Image.memory(base64Decode(e.image))),
-                        Expanded(
-                          flex: 4,
-                          child: ListTile(
-                            title: Text(e.title),
-                            subtitle: Text(e.desc),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Quantity:${e.quant}"),
-                                SizedBox(
-                                  height: 4,
+    return (_load)
+        ? Scaffold(body: Center(child: (CircularProgressIndicator())))
+        : (BOXES().getorders().length == 0)
+            ? Scaffold(
+                appBar: AppBar(
+                  title: Text("ORDERS"),
+                  centerTitle: true,
+                ),
+                body: Center(child: Text("No products are there")))
+            : Scaffold(
+                appBar: AppBar(
+                  title: Text("ORDERS"),
+                  centerTitle: true,
+                ),
+                body: ListView(
+                  children: BOXES().getorders().values.map((e) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(20),
+                        elevation: 10,
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Image.memory(base64Decode(e.image))),
+                            Expanded(
+                              flex: 4,
+                              child: ListTile(
+                                title: Text(e.title),
+                                subtitle: Text(e.desc),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Quantity:${e.quant}"),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text("Price:${e.price}"),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      "Total :" +
+                                          (e.quant * e.price).toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
-                                Text("Price:${e.price}"),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  "Total :" + (e.quant * e.price).toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          );
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
   }
 }

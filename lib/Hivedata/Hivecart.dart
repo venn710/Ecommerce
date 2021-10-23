@@ -76,7 +76,12 @@ class _TESTINGCARTState extends State<TESTINGCART> {
     return (_load)
         ? Scaffold(body: Center(child: CircularProgressIndicator()))
         : (BOXES().getcart().length == 0)
-            ? Scaffold(body: Center(child: Text("No products are there")))
+            ? Scaffold(
+              appBar: AppBar(
+                title: Text("CART"),
+                centerTitle: true,
+              ),              
+              body: Center(child: Text("No products are there")))
             : Scaffold(
               appBar: AppBar(
                 title: Text("CART"),
