@@ -285,6 +285,7 @@ class _TESTINGCARTState extends State<TESTINGCART> {
                                                                   });
                                                               if (mounted)
                                                                 setState(() {
+                                                                  subtot=subtot-(e.quant*e.price);
                                                                   e.delete();
                                                                 });
                                                               print(

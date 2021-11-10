@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fresh/Hivedata/Hivecart.dart';
 import 'package:fresh/boxes.dart';
 import 'package:fresh/cartfin.dart';
 import 'package:fresh/models/cart.dart';
@@ -29,13 +30,16 @@ class _IndiState extends State<Indi> {
             bottom: MediaQuery.of(context).size.height / 5.2,
             left: 0,
             right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: MemoryImage(base64Decode(widget.p1.image)),
-                      fit: BoxFit.cover)),
-              width: double.infinity,
-            ),
+            child:Image(
+              fit: BoxFit.cover,
+              image: MemoryImage(base64Decode(widget.p1.image)),),
+            // Container(
+            //   decoration: BoxDecoration(
+            //       image: DecorationImage(
+            //           image: MemoryImage(base64Decode(widget.p1.image),scale:5),
+            //           fit: BoxFit.cover)),
+            //   width: double.infinity,
+            // ),
           ),
           Positioned(
             top: MediaQuery.of(context).size.height -
@@ -279,7 +283,7 @@ class _BottsheetState extends State<Bottsheet> {
                             SharedPreferences prefs =await SharedPreferences.getInstance();
                             Navigator.push(context,MaterialPageRoute(builder: (context)
                             {
-                              return Cart(user: prefs.getString('email'),); 
+                              return TESTINGCART(); 
                             }));    
                                   }, child: Text("Go to Cart")),
                                   TextButton(onPressed: (){
@@ -289,7 +293,6 @@ class _BottsheetState extends State<Bottsheet> {
                                 ]
                               );
                             });
-                            // showInSnackbar(context);
                         print("cart posted");
                       },
                       child: Material(

@@ -21,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../men.dart';
 
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -33,22 +34,18 @@ class _HomePageState extends State<HomePage> {
   List finres;
   void initState() {
     super.initState();
-    getauth();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    // Hive.close();
+    Hive.close();
   }
 
-  void getauth() async {
+  Future getauth() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      usermail = prefs.getString('email');
-      isadmin = prefs.getBool('isadmin');
-    });
+    return prefs.getBool('isadmin');
   }
 
   @override
@@ -89,16 +86,26 @@ class _HomePageState extends State<HomePage> {
                     width: MediaQuery.of(context).size.width / 1.3,
                     child: Column(
                       children: [
-                        (isadmin)
-                            ? TextButton(
+                FutureBuilder(
+                  future:getauth(),
+                  builder: (context,snap)
+                 {
+                  if(snap.connectionState==ConnectionState.waiting)
+                    return CircularProgressIndicator();
+                  else if(snap.connectionState==ConnectionState.none)
+                    return Container();
+                  else if(snap.connectionState==ConnectionState.done)
+                  {
+                    return (snap.data==true)?TextButton(
                                 onPressed: () => Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Add())),
                                 child: Center(
-                                  child: Text("Wanna ADD your product"),
-                                ))
-                            : Container(),
+                                  child: Text("Add Your Product"),
+                                )):Container();
+                  }
+                }),
                         GestureDetector(
                             onTap: () => Navigator.of(context).pop(),
                             child: Drawercard(
@@ -182,6 +189,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              
             ),
             backgroundColor: Colors.cyan[100],
             body: SafeArea(

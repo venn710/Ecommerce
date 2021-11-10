@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fresh/Mencatos/Jeans.dart';
+import 'package:fresh/productsdisplay.dart';
 import 'Mencatos/Footwear.dart';
 import 'Mencatos/Hoodies.dart';
 import 'Mencatos/Shirts.dart';
 List<String>catos=["Jeans","Shirt","Footwear","Hoodies"];
-List<Widget> _mencats=[Jeans(),Shirts(),Footwear(),Hoodies()];
+
 int finindex=0;
 class Men extends StatefulWidget {
   @override
@@ -100,8 +101,19 @@ class _Cate1State extends State<Cate1> {
       ),
       Expanded(
         flex: 10,
-        child: _mencats[finindex])
+        child:ProductDisplay(ind: finindex)
+      )
     ],
         );
   }
 }
+// GestureDetector(
+//   onPanUpdate: (details) {
+//     // Swiping in right direction.
+//     if (details.delta.dx > 0) {}
+  
+//     // Swiping in left direction.
+//     if (details.delta.dx < 0) {}
+//   },
+//   child: YourWidget(),
+// )
